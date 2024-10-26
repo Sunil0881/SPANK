@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import GirlFull from "../src/assets/GirlFull.png";
 import NewImage from "../src/assets/ZoomGirl.png"; // Import the new image
 import startbtn from "../src/assets/startbtn.png";
