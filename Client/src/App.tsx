@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import GirlFull from "../src/assets/GirlFull.png";
-import NewImage from "../src/assets/ZoomGirl.png"; // Import the new image
+import ZoomGirl from "../src/assets/ZoomGirl.png"; // Import the new image
 import startbtn from "../src/assets/startbtn.png";
+import Beach from "../src/assets/beach.png";
 
 function App() {
   const [isVisible, setIsVisible] = useState(true);
@@ -23,25 +24,28 @@ function App() {
   }, [isVisible]);
 
   return (
-    <div className="relative flex items-center justify-center h-screen">
-      <div className="w-[1000px] h-[1000px] flex items-center justify-center">
+    <div className="relative flex items-center justify-center h-screen bg-black">
+      <div className="relative w-[1000px] h-[1000px] flex items-center justify-center">
         {/* Main Image that changes after the overlay disappears */}
         <img
-          src={isFirstImage ? GirlFull : NewImage}
-          alt="MainImage"
-          className="w-full h-full object-cover"
-        />
+  src={isFirstImage ? GirlFull : ZoomGirl}
+  alt="MainImage"
+  className={`${isFirstImage ? "object-cover w-full h-full" : "object-contain"}`}
+  style={isFirstImage ? {} : { width: "515px", height: "515px" }}
+/>
+
+        
 
         {/* Black Overlay with Fade-Out Effect */}
         {isVisible && (
           <div
-            className={`absolute w-full h-full bg-black opacity-50 z-10 transition-opacity duration-700 ease-out ${
+            className={`absolute inset-0 bg-black opacity-50 z-10 transition-opacity duration-700 ease-out ${
               !isVisible ? "opacity-0" : ""
             }`}
           />
         )}
 
-        {/* Second Image with Fade-Out Effect */}
+        {/* Start Button with Fade-Out Effect */}
         {isVisible && (
           <img
             src={startbtn}
