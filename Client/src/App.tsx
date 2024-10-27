@@ -3,46 +3,41 @@ import GirlFull from "../src/assets/GirlFull.png";
 import ZoomGirl from "../src/assets/ZoomGirl.png"; // Import the new image
 import startbtn from "../src/assets/startbtn.png";
 
-import '@rainbow-me/rainbowkit/styles.css';
-
-import {ConnectButton,getDefaultConfig,RainbowKitProvider} from '@rainbow-me/rainbowkit';
-import { WagmiProvider } from 'wagmi';
-import {
-  mainnet,
-  polygon,
-  optimism,
-  arbitrum,
-  base,
-  zora,
-  polygonMumbai,
-  sepolia,
-  xdcTestnet,
-} from 'wagmi/chains';
-import {
-  QueryClientProvider,
-  QueryClient,
-} from "@tanstack/react-query";
-
-const config = getDefaultConfig({
-  appName: 'My RainbowKit App',
-  projectId: 'YOUR_PROJECT_ID',
-  chains: [polygonMumbai,sepolia,xdcTestnet],
-  ssr: true, // If your dApp uses server side rendering (SSR)
-});
-const queryClient = new QueryClient();
-
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useAccount } from 'wagmi'; // Import useAccount
 
 function App() {
   const imageRef = useRef<HTMLImageElement | null>(null); // Specify the type of the ref
   const [coordinates, setCoordinates] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(true);
   const [isFirstImage, setIsFirstImage] = useState(true); // Track the main image
+  const [isWalletConnected, setIsWalletConnected] = useState(false); // Track wallet connection status
+  const [message, setMessage] = useState(""); // State for message
+const [showMessage, setShowMessage] = useState(false); // State for showing the message
+
+
+  // Use wagmi's useAccount to track if the wallet is connected
+  const { isConnected } = useAccount();
+
+  useEffect(() => {
+    setIsWalletConnected(isConnected); // Update wallet connection state
+  }, [isConnected]);
 
   const handleClick = () => {
-    setIsVisible(false); // Start fade-out animation for overlay and button
+    if (isWalletConnected && imageRef.current) {
+      setIsVisible(false); // Start fade-out animation for overlay and button
+    } else {
+      setMessage("Please connect your wallet");
+      setShowMessage(true); // Show the message
+      setTimeout(() => {
+        setShowMessage(false); // Hide the message after a few seconds
+      }, 1000); // Adjust duration as needed (3000ms = 3 seconds)
+    }
   };
+  
 
   const handleImageClick = (e: React.MouseEvent<HTMLImageElement>) => {
+    
     if (imageRef.current) { // Check if the ref is not null
       const rect = imageRef.current.getBoundingClientRect();
       const x = e.clientX - rect.left; // X coordinate relative to the image
@@ -53,6 +48,7 @@ function App() {
       // Check which area was clicked and perform the corresponding action
       checkActionArea(x, y);
     }
+    
   };
 
   const checkActionArea = (x: number, y: number) => {
@@ -101,46 +97,56 @@ function App() {
   }, [isVisible]);
 
   return (
-    <WagmiProvider config={config}>
-    <QueryClientProvider client={queryClient}>
-      <RainbowKitProvider >
-    <div className="relative flex items-center justify-center h-screen bg-black">
-      <div className="relative w-[1000px] h-[1000px] flex items-center justify-center">
-        {/* Main Image that changes after the overlay disappears */}
-        <img
-          ref={imageRef} // Attach the ref to the image
-          src={isFirstImage ? GirlFull : ZoomGirl}
-          alt="MainImage"
-          onClick={handleImageClick}
-          className={`${isFirstImage ? "object-cover w-full h-full" : "object-contain"}`}
-          style={isFirstImage ? {} : { width: "515px", height: "515px" }}
-        />
+   
+          <div className="relative flex items-center justify-center h-screen bg-black">
+            <div className="relative w-[1000px] h-[1000px] flex items-center justify-center">
+              {/* Main Image that changes after the overlay disappears */}
+              <img
+                ref={imageRef} // Attach the ref to the image
+                src={isFirstImage ? GirlFull : ZoomGirl}
+                alt="MainImage"
+                onClick={isFirstImage ? handleImageClick : undefined} // Make the second image clickable only when it is shown
+                className={`${isFirstImage ? "object-cover w-full h-full" : "object-contain"}`}
+                style={isFirstImage ? {} : { width: "515px", height: "515px" }}
+              />
 
-        {/* Black Overlay with Fade-Out Effect */}
-        {isVisible && (
-          <div
-            className={`absolute inset-0 bg-black opacity-50 z-10 transition-opacity duration-700 ease-out ${
-              !isVisible ? "opacity-0" : ""
-            }`}
-          />
-        )}
+              {/* Black Overlay with Fade-Out Effect */}
+              {isVisible && (
+                <div
+                  className={`absolute inset-0 bg-black opacity-50 z-10 transition-opacity duration-700 ease-out ${
+                    !isVisible ? "opacity-0" : ""
+                  }`}
+                />
+              )}
 
-        {/* Start Button with Fade-Out Effect */}
-        {isVisible && (
-          <img
-            src={startbtn}
-            alt="startbtn"
-            onClick={handleClick}
-            className={`absolute w-20 h-20 object-cover z-20 cursor-pointer transition-opacity duration-700 ease-out ${
-              !isVisible ? "opacity-0" : ""
-            }`}
-          />
-        )}
-      </div>
-    </div>
-    </RainbowKitProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
+              {/* Start Button with Fade-Out Effect */}
+              {isVisible && (
+                <img
+                  src={startbtn}
+                  alt="startbtn"
+                  onClick={handleClick}
+                  className={`absolute w-20 h-20 object-cover z-20 cursor-pointer transition-opacity duration-700 ease-out ${
+                    !isVisible ? "opacity-0" : ""
+                  }`}
+                />
+              )}
+
+              {/* Connect Wallet Button - Positioned Over the Second Image */}
+              {isFirstImage && (
+                <div className="absolute bottom-7 z-20">
+                  <ConnectButton />
+                </div>
+              )}
+
+               {/* Message Display */}
+            {showMessage && (
+              <div className="absolute bottom-52 left-1/2 transform -translate-x-1/2 bg-white text-black p-1 rounded shadow-md z-20">
+                {message}
+              </div>
+            )}
+            </div>
+          </div>
+       
   );
 }
 
