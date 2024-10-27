@@ -17,3 +17,49 @@
     }
   }
   
+
+/* Add this to your CSS file */
+
+/* Keyframes for fading in from the top */
+@keyframes fadeInFromTop {
+    0% {
+      opacity: 0; /* Start completely transparent */
+      transform: translateY(-20px); /* Start slightly above the final position */
+    }
+    100% {
+      opacity: 1; /* Fully opaque */
+      transform: translateY(0); /* Final position */
+    }
+  }
+  
+ /* Keyframes for fading in from the bottom */
+@keyframes fadeInFromBottom {
+    0% {
+      opacity: 0; /* Start completely transparent */
+      transform: translateY(20px); /* Start slightly below the final position */
+    }
+    100% {
+      opacity: 1; /* Fully opaque */
+      transform: translateY(0); /* Final position */
+    }
+  }
+  
+  /* Animation for new-action-image */
+  .new-action-image {
+    position: absolute; /* Positioning to enable placement */
+    left: 123px; /* Static left position */
+    top: 168px;  /* Static top position */
+    animation: fadeInFromBottom 0.5s ease forwards; /* Apply the bottom-to-top fade-in animation */
+    display: none; /* Initially hidden */
+  }
+  
+  /* Class to show the image */
+  .new-action-image.show {
+    display: block; /* Show the image */
+  }
+  
+  /* Class to hide the image */
+  .new-action-image.hide {
+    display: none; /* Remove the image from display when hiding */
+  }
+  

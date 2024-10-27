@@ -3,6 +3,7 @@ import GirlFull from "../src/assets/GirlFull.png";
 import ZoomGirl from "../src/assets/ZoomGirl.png"; // Import the new image
 import startbtn from "../src/assets/startbtn.png";
 import ActionImage from "../src/assets/Spank.png";
+import PlusoneImage from "../src/assets/One.png"; // Import your new image
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi'; // Import useAccount
 import "./App.css"
@@ -15,8 +16,10 @@ function App() {
   const [isWalletConnected, setIsWalletConnected] = useState(false); // Track wallet connection status
   const [message, setMessage] = useState(""); // State for message
   const [showMessage, setShowMessage] = useState(false); // State for showing the message
-  const [showActionImage, setShowActionImage] = useState(false);
+  const [showSpankImage, setShowSpankImage] = useState(false);
+  const [showPlusoneImage, setShowPlusoneImage] = useState(false); // New state for the additional image
   const [lastActionCoordinates, setLastActionCoordinates] = useState<{ x: number; y: number } | null>(null); // New state for last clicked coordinates
+  const [newImagePosition, setNewImagePosition] = useState<{ x: number; y: number } | null>(null); // Position for the new image
 
   // Use wagmi's useAccount to track if the wallet is connected
   const { isConnected } = useAccount();
@@ -76,6 +79,10 @@ function App() {
         // Update last clicked coordinates and display the action image
         setLastActionCoordinates({ x, y });
         displayActionImage(); // Call to display image at last clicked position
+        
+        // Set specific position for the new action image
+        setNewImagePosition({ x: 250, y: 300 }); // Set your desired position
+       
         break;
       case "area2":
         alert("Action for Area 2 triggered!");
@@ -87,12 +94,13 @@ function App() {
   };
 
   const displayActionImage = () => {
-    setShowActionImage(true); // Show the action image
-
+    setShowSpankImage(true); // Show the action image
+    setShowPlusoneImage(true); // Show the new action image
     // Hide the action image after 1 second
     setTimeout(() => {
-      setShowActionImage(false);
-    }, 1000);
+      setShowSpankImage(false);
+      setShowPlusoneImage(false); // Show the new action image
+    }, 600);
   };
 
   useEffect(() => {
@@ -144,16 +152,31 @@ function App() {
         )}
 
         {/* Action Image Display */}
-        {showActionImage && lastActionCoordinates && (
+        {showSpankImage && lastActionCoordinates && (
           <img
             src={ActionImage}
             alt="Action"
             className={`absolute action-image`}
             style={{
-               left: '235px', // Use last clicked coordinates
-               top: '260px',
+              left: '235px', // Use last clicked coordinates
+              top: '260px',
               width: '90px', // Set desired width
               height: '90px', // Set desired height
+            }}
+          />
+        )}
+
+        {/* New Action Image Display */}
+        {showPlusoneImage && newImagePosition && (
+          <img
+            src={PlusoneImage}
+            alt="New Action"
+            className={`new-action-image ${showPlusoneImage ? "show" : "hide"}`}
+            style={{
+              left: '123px', // Use last clicked coordinates
+               top: '168px',
+              width: '30px', // Set desired width
+              height: '80px', // Set desired height
             }}
           />
         )}
