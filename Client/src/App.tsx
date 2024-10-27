@@ -20,6 +20,7 @@ function App() {
   const [showPlusoneImage, setShowPlusoneImage] = useState(false); // New state for the additional image
   const [lastActionCoordinates, setLastActionCoordinates] = useState<{ x: number; y: number } | null>(null); // New state for last clicked coordinates
   const [newImagePosition, setNewImagePosition] = useState<{ x: number; y: number } | null>(null); // Position for the new image
+  const [score, setScore] = useState(0); // New state for the score
 
   // Use wagmi's useAccount to track if the wallet is connected
   const { isConnected } = useAccount();
@@ -82,6 +83,9 @@ function App() {
         
         // Set specific position for the new action image
         setNewImagePosition({ x: 250, y: 300 }); // Set your desired position
+        
+        // Increment the score
+        setScore(prevScore => prevScore + 1); // Increment score by 1
        
         break;
       case "area2":
@@ -174,12 +178,20 @@ function App() {
             className={`new-action-image ${showPlusoneImage ? "show" : "hide"}`}
             style={{
               left: '123px', // Use last clicked coordinates
-               top: '168px',
+              top: '168px',
               width: '30px', // Set desired width
               height: '80px', // Set desired height
             }}
           />
         )}
+
+        {/* Score Display */}
+        <div className="absolute top-40  right-16 text-black text-3xl z-20"  style={{
+    top: "148px", // Adjust the top position as needed
+    right: "35px", // Adjust the right position as needed
+  }}>
+           {score}
+        </div>
 
         {/* Message Display */}
         {showMessage && (
