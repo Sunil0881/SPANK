@@ -47,7 +47,7 @@ function App() {
       const x = e.clientX - rect.left; // X coordinate relative to the image
       const y = e.clientY - rect.top;  // Y coordinate relative to the image
       setCoordinates({ x, y });
-      console.log("Coordinates:", { x, y }); // Log coordinates directly
+      console.log("Coordinates:", { x, y },coordinates); // Log coordinates directly
 
       // Check which area was clicked and perform the corresponding action
       checkActionArea(x, y);
