@@ -107,16 +107,16 @@ function App() {
     }, 600);
   };
 
-  const checkLevelUp = (newScore: number) => {
-    const nextLevelIndex = level - 1; // Get the index for the current level
-    if (nextLevelIndex < levelRequirements.length && newScore >= levelRequirements[nextLevelIndex]) {
-      // Level up only if the next level hasn't been reached yet
-      if (level <= nextLevelIndex + 1) {
-        setLevel(prevLevel => prevLevel + 1);
-        alert(`Congratulations! You've reached Level ${level + 1}!`);
-      }
-    }
-  };
+  // const checkLevelUp = (newScore: number) => {
+  //   const nextLevelIndex = level - 1; // Get the index for the current level
+  //   if (nextLevelIndex < levelRequirements.length && newScore >= levelRequirements[nextLevelIndex]) {
+  //     // Level up only if the next level hasn't been reached yet
+  //     if (level <= nextLevelIndex + 1) {
+  //       setLevel(prevLevel => prevLevel + 1);
+  //       alert(`Congratulations! You've reached Level ${level + 1}!`);
+  //     }
+  //   }
+  // };
   
   // In handleAction where the score is updated
   const handleAction = (areaId: string, x: number, y: number) => {
