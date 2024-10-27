@@ -8,6 +8,7 @@ import RedImage from "../src/assets/Red.png"
 import RedhandImage from "../src/assets/redhand.png"; // Import the level-up image
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
+import {dev, local} from "./Constant";
 import "./App.css";
 
 
@@ -27,12 +28,43 @@ function App() {
   const [newImagePosition, setNewImagePosition] = useState<{ x: number; y: number } | null>(null);
   const [score, setScore] = useState(0);
   const [level, setLevel] = useState(1);
+  const [userData, setUserData] = useState(null);
+  const [error, setError] = useState(null);
   const levelRequirements = [2, 5, 10, 15];
 
   const { isConnected } = useAccount();
 
   useEffect(() => {
     setIsWalletConnected(isConnected);
+    const Address = "0xebA2E8791585Cb1e20E40192c716E025A94DAb64";
+    const fetchUserData = async () => {
+      if (isConnected) {
+        const address = Address; // Replace with the actual wallet address
+
+        try {
+          const response = await fetch(`${local}/api/user`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ address }),
+          });
+
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+
+          const data = await response.json();
+          setUserData(data);
+        } catch (error:any) {
+          setError(error.message);
+        }
+      }
+    };
+
+    fetchUserData();
+
+
   }, [isConnected]);
 
   const handleClick = () => {
