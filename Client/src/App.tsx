@@ -21,6 +21,9 @@ function App() {
   const [lastActionCoordinates, setLastActionCoordinates] = useState<{ x: number; y: number } | null>(null); // New state for last clicked coordinates
   const [newImagePosition, setNewImagePosition] = useState<{ x: number; y: number } | null>(null); // Position for the new image
   const [score, setScore] = useState(0); // New state for the score
+  const [level, setLevel] = useState(1);
+
+  const levelRequirements = [2, 4, 8, 16]; 
 
   // Use wagmi's useAccount to track if the wallet is connected
   const { isConnected } = useAccount();
@@ -85,7 +88,11 @@ function App() {
         setNewImagePosition({ x: 250, y: 300 }); // Set your desired position
         
         // Increment the score
-        setScore(prevScore => prevScore + 1); // Increment score by 1
+        setScore((prevScore) => {
+          const newScore = prevScore + 1;
+          checkLevelUp(newScore);
+          return newScore;
+        }); // Increment score by 1
        
         break;
       case "area2":
@@ -105,6 +112,14 @@ function App() {
       setShowSpankImage(false);
       setShowPlusoneImage(false); // Show the new action image
     }, 600);
+  };
+
+  const checkLevelUp = (newScore: number) => {
+    const currentLevel = level - 1; // Since levels are 1-based
+    if (currentLevel < levelRequirements.length && newScore >= levelRequirements[currentLevel]) {
+      setLevel((prevLevel) => prevLevel + 1);
+      alert(`Congratulations! You've reached Level ${level + 1}!`);
+    }
   };
 
   useEffect(() => {
@@ -186,12 +201,24 @@ function App() {
         )}
 
         {/* Score Display */}
-        <div className="absolute top-40  right-16 text-black text-3xl z-20"  style={{
-    top: "148px", // Adjust the top position as needed
-    right: "35px", // Adjust the right position as needed
-  }}>
+        {!isFirstImage && (
+        <div className="absolute top-40   text-black text-3xl z-20"  style={{
+            top: "148px", // Adjust the top position as needed
+            right: "35px", // Adjust the right position as needed
+          }}>
            {score}
         </div>
+        )}
+
+        {/* Level Display */}
+        {!isFirstImage && (
+        <div className="absolute top-40   text-black text-2xl z-20 font-bold"  style={{
+            top: "160px", // Adjust the top position as needed
+            left: "60px", // Adjust the right position as needed
+          }}>
+           {level}
+        </div>
+        )}
 
         {/* Message Display */}
         {showMessage && (
