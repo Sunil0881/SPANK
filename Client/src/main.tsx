@@ -8,3 +8,6 @@ createRoot(document.getElementById('root')!).render(
     <App />
   </StrictMode>,
 )
+
+
+// { id: "area1", x: 185, y: 271, width: 130, height: 80 }, 
