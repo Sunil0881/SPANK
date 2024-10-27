@@ -23,7 +23,7 @@ function App() {
   const [score, setScore] = useState(0); // New state for the score
   const [level, setLevel] = useState(1);
 
-  const levelRequirements = [2, 4, 8, 16]; 
+  const levelRequirements = [2, 5, 10, 15]; 
 
   // Use wagmi's useAccount to track if the wallet is connected
   const { isConnected } = useAccount();
@@ -77,6 +77,48 @@ function App() {
     });
   };
 
+  useEffect(() => {
+    console.log("Score:", score, "Level:", level);
+
+    // Make sure we do not exceed the number of levels defined
+    if (level - 1 < levelRequirements.length) {
+        // Check if the score meets the requirement for the next level
+        if (score >= levelRequirements[level - 1]) {
+            setLevel(prevLevel => {
+                const nextLevel = prevLevel + 1; // Increment level
+                alert(`Congratulations! You've reached Level ${nextLevel}!`);
+                return nextLevel;
+            });
+        }
+    }
+}, [score]); 
+
+  
+
+ 
+
+  const displayActionImage = () => {
+    setShowSpankImage(true); // Show the action image
+    setShowPlusoneImage(true); // Show the new action image
+    // Hide the action image after 1 second
+    setTimeout(() => {
+      setShowSpankImage(false);
+      setShowPlusoneImage(false); // Show the new action image
+    }, 600);
+  };
+
+  const checkLevelUp = (newScore: number) => {
+    const nextLevelIndex = level - 1; // Get the index for the current level
+    if (nextLevelIndex < levelRequirements.length && newScore >= levelRequirements[nextLevelIndex]) {
+      // Level up only if the next level hasn't been reached yet
+      if (level <= nextLevelIndex + 1) {
+        setLevel(prevLevel => prevLevel + 1);
+        alert(`Congratulations! You've reached Level ${level + 1}!`);
+      }
+    }
+  };
+  
+  // In handleAction where the score is updated
   const handleAction = (areaId: string, x: number, y: number) => {
     switch (areaId) {
       case "area1":
@@ -90,10 +132,9 @@ function App() {
         // Increment the score
         setScore((prevScore) => {
           const newScore = prevScore + 1;
-          checkLevelUp(newScore);
-          return newScore;
-        }); // Increment score by 1
-       
+          // checkLevelUp(newScore); // Check for level up
+          return newScore; // Increment score by 1
+        });
         break;
       case "area2":
         alert("Action for Area 2 triggered!");
@@ -103,24 +144,8 @@ function App() {
         break;
     }
   };
-
-  const displayActionImage = () => {
-    setShowSpankImage(true); // Show the action image
-    setShowPlusoneImage(true); // Show the new action image
-    // Hide the action image after 1 second
-    setTimeout(() => {
-      setShowSpankImage(false);
-      setShowPlusoneImage(false); // Show the new action image
-    }, 600);
-  };
-
-  const checkLevelUp = (newScore: number) => {
-    const currentLevel = level - 1; // Since levels are 1-based
-    if (currentLevel < levelRequirements.length && newScore >= levelRequirements[currentLevel]) {
-      setLevel((prevLevel) => prevLevel + 1);
-      alert(`Congratulations! You've reached Level ${level + 1}!`);
-    }
-  };
+  
+  
 
   useEffect(() => {
     if (!isVisible) {
