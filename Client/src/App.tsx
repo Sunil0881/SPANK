@@ -2,9 +2,10 @@ import { useState, useEffect, useRef } from "react";
 import GirlFull from "../src/assets/GirlFull.png";
 import ZoomGirl from "../src/assets/ZoomGirl.png"; // Import the new image
 import startbtn from "../src/assets/startbtn.png";
-
+import ActionImage from "../src/assets/Spank.png";
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi'; // Import useAccount
+import "./App.css"
 
 function App() {
   const imageRef = useRef<HTMLImageElement | null>(null); // Specify the type of the ref
@@ -13,8 +14,9 @@ function App() {
   const [isFirstImage, setIsFirstImage] = useState(true); // Track the main image
   const [isWalletConnected, setIsWalletConnected] = useState(false); // Track wallet connection status
   const [message, setMessage] = useState(""); // State for message
-const [showMessage, setShowMessage] = useState(false); // State for showing the message
-
+  const [showMessage, setShowMessage] = useState(false); // State for showing the message
+  const [showActionImage, setShowActionImage] = useState(false);
+  const [lastActionCoordinates, setLastActionCoordinates] = useState<{ x: number; y: number } | null>(null); // New state for last clicked coordinates
 
   // Use wagmi's useAccount to track if the wallet is connected
   const { isConnected } = useAccount();
@@ -34,10 +36,8 @@ const [showMessage, setShowMessage] = useState(false); // State for showing the 
       }, 1000); // Adjust duration as needed (3000ms = 3 seconds)
     }
   };
-  
 
   const handleImageClick = (e: React.MouseEvent<HTMLImageElement>) => {
-    
     if (imageRef.current) { // Check if the ref is not null
       const rect = imageRef.current.getBoundingClientRect();
       const x = e.clientX - rect.left; // X coordinate relative to the image
@@ -48,7 +48,6 @@ const [showMessage, setShowMessage] = useState(false); // State for showing the 
       // Check which area was clicked and perform the corresponding action
       checkActionArea(x, y);
     }
-    
   };
 
   const checkActionArea = (x: number, y: number) => {
@@ -66,15 +65,17 @@ const [showMessage, setShowMessage] = useState(false); // State for showing the 
         y <= area.y + area.height
       ) {
         // Trigger action based on the area clicked
-        handleAction(area.id);
+        handleAction(area.id, x, y);
       }
     });
   };
 
-  const handleAction = (areaId: string) => {
+  const handleAction = (areaId: string, x: number, y: number) => {
     switch (areaId) {
       case "area1":
-        alert("Action for butt triggered!");
+        // Update last clicked coordinates and display the action image
+        setLastActionCoordinates({ x, y });
+        displayActionImage(); // Call to display image at last clicked position
         break;
       case "area2":
         alert("Action for Area 2 triggered!");
@@ -83,6 +84,15 @@ const [showMessage, setShowMessage] = useState(false); // State for showing the 
         console.log("No action defined for this area.");
         break;
     }
+  };
+
+  const displayActionImage = () => {
+    setShowActionImage(true); // Show the action image
+
+    // Hide the action image after 1 second
+    setTimeout(() => {
+      setShowActionImage(false);
+    }, 1000);
   };
 
   useEffect(() => {
@@ -97,56 +107,65 @@ const [showMessage, setShowMessage] = useState(false); // State for showing the 
   }, [isVisible]);
 
   return (
-   
-          <div className="relative flex items-center justify-center h-screen bg-black">
-            <div className="relative w-[1000px] h-[1000px] flex items-center justify-center">
-              {/* Main Image that changes after the overlay disappears */}
-              <img
-                ref={imageRef} // Attach the ref to the image
-                src={isFirstImage ? GirlFull : ZoomGirl}
-                alt="MainImage"
-                onClick={isFirstImage ? handleImageClick : undefined} // Make the second image clickable only when it is shown
-                className={`${isFirstImage ? "object-cover w-full h-full" : "object-contain"}`}
-                style={isFirstImage ? {} : { width: "515px", height: "515px" }}
-              />
+    <div className="relative flex items-center justify-center h-screen bg-black">
+      <div className="relative w-[1000px] h-[1000px] flex items-center justify-center">
+        {/* Main Image that changes after the overlay disappears */}
+        <img
+          ref={imageRef} // Attach the ref to the image
+          src={isFirstImage ? GirlFull : ZoomGirl}
+          alt="MainImage"
+          onClick={isFirstImage ? handleImageClick : handleImageClick} // Make both images clickable
+          className={`${isFirstImage ? "object-cover w-full h-full" : "object-contain"}`}
+          style={isFirstImage ? {} : { width: "515px", height: "515px" }}
+        />
 
-              {/* Black Overlay with Fade-Out Effect */}
-              {isVisible && (
-                <div
-                  className={`absolute inset-0 bg-black opacity-50 z-10 transition-opacity duration-700 ease-out ${
-                    !isVisible ? "opacity-0" : ""
-                  }`}
-                />
-              )}
+        {/* Black Overlay with Fade-Out Effect */}
+        {isVisible && (
+          <div
+            className={`absolute inset-0 bg-black opacity-50 z-10 transition-opacity duration-700 ease-out ${!isVisible ? "opacity-0" : ""}`}
+          />
+        )}
 
-              {/* Start Button with Fade-Out Effect */}
-              {isVisible && (
-                <img
-                  src={startbtn}
-                  alt="startbtn"
-                  onClick={handleClick}
-                  className={`absolute w-20 h-20 object-cover z-20 cursor-pointer transition-opacity duration-700 ease-out ${
-                    !isVisible ? "opacity-0" : ""
-                  }`}
-                />
-              )}
+        {/* Start Button with Fade-Out Effect */}
+        {isVisible && (
+          <img
+            src={startbtn}
+            alt="startbtn"
+            onClick={handleClick}
+            className={`absolute w-20 h-20 object-cover z-20 cursor-pointer transition-opacity duration-700 ease-out ${!isVisible ? "opacity-0" : ""}`}
+          />
+        )}
 
-              {/* Connect Wallet Button - Positioned Over the Second Image */}
-              {isFirstImage && (
-                <div className="absolute bottom-7 z-20">
-                  <ConnectButton />
-                </div>
-              )}
-
-               {/* Message Display */}
-            {showMessage && (
-              <div className="absolute bottom-52 left-1/2 transform -translate-x-1/2 bg-white text-black p-1 rounded shadow-md z-20">
-                {message}
-              </div>
-            )}
-            </div>
+        {/* Connect Wallet Button - Positioned Over the Second Image */}
+        {isFirstImage && (
+          <div className="absolute bottom-7 z-20">
+            <ConnectButton />
           </div>
-       
+        )}
+
+        {/* Action Image Display */}
+        {showActionImage && lastActionCoordinates && (
+          <img
+            src={ActionImage}
+            alt="Action"
+            className={`absolute action-image`}
+            style={{
+               left: '235px', // Use last clicked coordinates
+               top: '260px',
+              width: '90px', // Set desired width
+              height: '90px', // Set desired height
+            }}
+          />
+        )}
+
+        {/* Message Display */}
+        {showMessage && (
+          <div className="absolute bottom-52 left-1/2 transform -translate-x-1/2 bg-white text-black p-1 rounded shadow-md z-20">
+            {message}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 
