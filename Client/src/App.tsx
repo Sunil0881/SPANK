@@ -56,6 +56,12 @@ function App() {
 
           const data = await response.json();
           setUserData(data);
+          if (data) {
+            setScore(data.score ?? 0); // Fallback to 0 if score is missing
+            setLevel(data.level ?? 1); // Fallback to 1 if level is missing
+          }
+    
+          console.log(userData);
         } catch (error:any) {
           setError(error.message);
         }
@@ -66,6 +72,48 @@ function App() {
 
 
   }, [isConnected]);
+
+
+  useEffect(() => {
+    let intervalId;
+  
+    if (isConnected) {
+      intervalId = setInterval(() => {
+        updateUserData();
+      }, 3000); // Run every 5 seconds
+    }
+  
+    return () => clearInterval(intervalId); // Clean up interval on unmount
+  }, [isConnected, score, level]);
+
+
+  const updateUserData = async () => {
+    if (isConnected) {
+      const address = "0xebA2E8791585Cb1e20E40192c716E025A94DAb64"; // Use the correct wallet address
+      const data = { address, score, level };
+      console.log("Updating Data to DB");
+      try {
+        const response = await fetch(`${local}/api/user/update`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to update user data');
+        }
+  
+        console.log('User data updated successfully');
+      } catch (error) {
+        console.error('Error updating user data:', error);
+      }
+    }
+  };
+
+  
+
 
   const handleClick = () => {
     if (isWalletConnected && imageRef.current) {
