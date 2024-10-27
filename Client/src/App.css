@@ -63,3 +63,43 @@
     display: none; /* Remove the image from display when hiding */
   }
   
+
+  .fade-in {
+    opacity: 0;
+    animation: fadeIn 1s ease-in-out forwards;
+    animation-delay: 0.5s; /* Adjust delay as needed */
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slowFadeInOut {
+    0% {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    30% {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+    70% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+  }
+  
+  .level-up-animation {
+    animation: slowFadeInOut 5s ease-in-out forwards;
+  }
+  
+  
