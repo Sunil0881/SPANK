@@ -8,6 +8,7 @@ import RedImage from "../src/assets/Red.png"
 import loadingImage from "../src/assets/splashscreen.png"; 
 import RedhandImage from "../src/assets/redhand.png"; // Import the level-up image
 import walletlogo from "../src/assets/walletbtn.png";
+import disconnectwlt from "../src/assets/disconnectwlt.png";
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import CustomButton from "./Components/CustomButton";
 import { useAccount } from 'wagmi';
@@ -121,6 +122,15 @@ const connectWallet = async () => {
   }
 };
  
+
+const disconnectWallet = () => {
+  setAddress(null); // Clear the address state
+  setIsConnected(false); // Update connection state
+  setIsWalletConnected(false); // Update wallet connection state
+  console.log("Wallet disconnected");
+};
+
+
   // useEffect(() => {
    
   //   if (isConnected) {
@@ -363,17 +373,22 @@ const handleReferClick = async () => {
           <div className="">
             {/* <ConnectButton /> */}
             {/* <CustomButton /> */}
-          
-            <button onClick={connectWallet} type="button" className="">
-                  <img
-            src={walletlogo}
-            alt="playbtn"
-         
-             className="absolute w-12 h-20 object-cover z-36 cursor-pointer  transition-opacity duration-700 ease-out  left-48"
-             style={{  top: '142px', width: '', height: '' }}
-          />
-                  </button>
-
+            {!isWalletConnected ? (
+                <button onClick={connectWallet} type="button" className="">
+                  <img src={walletlogo} alt="playbtn"
+                    className="absolute w-12 h-20 object-cover z-36 cursor-pointer  transition-opacity duration-700 ease-out  left-48"
+                    style={{  top: '142px', width: '', height: '' }} />
+                </button>
+            ) : (
+              <div>
+              {/* <p>Connected as: {address}</p> */}
+              <button onClick={disconnectWallet}  className="">
+              <img src={disconnectwlt} alt="playbtn"
+                    className="absolute w-12 h-20 object-cover z-36 cursor-pointer  transition-opacity duration-700 ease-out  left-48"
+                    style={{  top: '142px', width: '', height: '' }} />
+              </button>
+          </div>
+      )}
           </div>
         )}
         {showSpankImage && lastActionCoordinates && (
@@ -386,21 +401,21 @@ const handleReferClick = async () => {
           />
         )}
        
-       {showPlusoneImage && newImagePosition && (
-  <img
-    src={PlusoneImage}
-    loading="lazy"
-    alt="New Action"
-    className={`new-action-image ${showPlusoneImage ? "show" : "hide"}`}
-    style={{
-      position: 'absolute', // Ensure the image is positioned absolutely
-      left:"123px", // Use x coordinate from newImagePosition
-      top: "168px", // Use y coordinate from newImagePosition
-      width: '30px', // Set desired width
-      height: '80px', // Set desired height
-    }}
-  />
-)}
+          {showPlusoneImage && newImagePosition && (
+            <img
+              src={PlusoneImage}
+              loading="lazy"
+              alt="New Action"
+              className={`new-action-image ${showPlusoneImage ? "show" : "hide"}`}
+              style={{
+                position: 'absolute', // Ensure the image is positioned absolutely
+                left:"123px", // Use x coordinate from newImagePosition
+                top: "168px", // Use y coordinate from newImagePosition
+                width: '30px', // Set desired width
+                height: '80px', // Set desired height
+              }}
+            />
+          )}
          {showRedImage && (
           <img
             src={RedImage}
