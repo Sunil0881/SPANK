@@ -30,17 +30,24 @@ function App() {
   const [level, setLevel] = useState(1);
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
+  const [address, setAddress] = useState<`0x${string}` | undefined>(undefined); // Allows `undefined` or addresses of type `0x${string}`
   const levelRequirements = [2, 5, 10, 15];
 
   const { isConnected } = useAccount();
-
+  const account = useAccount();
+  const fetchedaddress = account.address;
+ 
   useEffect(() => {
-    setIsWalletConnected(isConnected);
-    const Address = "0xebA2E8791585Cb1e20E40192c716E025A94DAb64";
-    const fetchUserData = async () => {
-      if (isConnected) {
-        const address = Address; // Replace with the actual wallet address
+    if (isConnected && fetchedaddress) {
+      setIsWalletConnected(isConnected);
+      setAddress(fetchedaddress);
+    }
+  }, [isConnected, fetchedaddress]);
 
+  // Fetch user data when the wallet is connected
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (isConnected && address) {
         try {
           const response = await fetch(`${local}/api/user`, {
             method: 'POST',
@@ -56,42 +63,36 @@ function App() {
 
           const data = await response.json();
           setUserData(data);
-          if (data) {
-            setScore(data.score ?? 0); // Fallback to 0 if score is missing
-            setLevel(data.level ?? 1); // Fallback to 1 if level is missing
-          }
-    
-          console.log(userData);
-        } catch (error:any) {
+          setScore(data.score ?? 0); // Fallback to 0 if score is missing
+          setLevel(data.level ?? 1); // Fallback to 1 if level is missing
+          console.log(data);
+        } catch (error: any) {
           setError(error.message);
         }
       }
     };
 
     fetchUserData();
+  }, [isConnected, address]);
 
-
-  }, [isConnected]);
-
-
+  // Update user data every 5 seconds if connected
   useEffect(() => {
     let intervalId;
-  
-    if (isConnected) {
+
+    if (isConnected && address) {
       intervalId = setInterval(() => {
         updateUserData();
-      }, 3000); // Run every 5 seconds
+      }, 5000); // Run every 5 seconds
     }
-  
+
     return () => clearInterval(intervalId); // Clean up interval on unmount
-  }, [isConnected, score, level]);
+  }, [isConnected, address, score, level]);
 
-
+  // Update user data function
   const updateUserData = async () => {
-    if (isConnected) {
-      const address = "0xebA2E8791585Cb1e20E40192c716E025A94DAb64"; // Use the correct wallet address
+    if (isConnected && address) {
       const data = { address, score, level };
-      console.log("Updating Data to DB");
+      console.log('Updating Data to DB');
       try {
         const response = await fetch(`${local}/api/user/update`, {
           method: 'PUT',
@@ -100,19 +101,17 @@ function App() {
           },
           body: JSON.stringify(data),
         });
-  
+
         if (!response.ok) {
           throw new Error('Failed to update user data');
         }
-  
+
         console.log('User data updated successfully');
       } catch (error) {
         console.error('Error updating user data:', error);
       }
     }
   };
-
-  
 
 
   const handleClick = () => {
