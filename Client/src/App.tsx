@@ -187,6 +187,7 @@ function App() {
     setTimeout(() => {
       setShowSpankImage(false);
       setShowPlusoneImage(false);
+      setShowRedImage(false);
     }, 600);
   };
 
