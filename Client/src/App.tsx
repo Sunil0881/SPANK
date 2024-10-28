@@ -29,6 +29,7 @@ function App() {
   const [lastActionCoordinates, setLastActionCoordinates] = useState<{ x: number; y: number } | null>(null);
   const [newImagePosition, setNewImagePosition] = useState<{ x: number; y: number } | null>(null);
   const [score, setScore] = useState(0);
+  const [code, setCode] = useState(null);
   const [level, setLevel] = useState(1);
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
@@ -95,7 +96,8 @@ function App() {
           const data = await response.json();
           setUserData(data);
           setScore(data.score ?? 0); // Fallback to 0 if score is missing
-          setLevel(data.level ?? 1); // Fallback to 1 if level is missing
+          setLevel(data.level ?? 1);
+          setCode(data.referralCode ?? 1); // Fallback to 1 if level is missing
           console.log(data);
         } catch (error: any) {
           setError(error.message);
@@ -232,6 +234,25 @@ function animateProgress() {
 }
 
 animateProgress();
+
+
+const handleReferClick = async () => {
+  try {
+      const response = await fetch('/api/getReferralCode');
+      const data = await response.json();
+      if (data.referralCode) {
+          // Generate the shareable link with referral code
+          const referralUrl = `https://x.com/Sunil_0881/status/1850892353780748624?referral=${data.referralCode}`;
+          setShareLink(referralUrl);
+
+          // Optionally, copy the link to clipboard or open it in a new tab
+          navigator.clipboard.writeText(referralUrl);
+          alert('Referral link copied to clipboard!');
+      }
+  } catch (error) {
+      console.error('Error fetching referral code:', error);
+  }
+};
   
  
 
@@ -343,6 +364,11 @@ animateProgress();
             {message}
           </div>
         )}
+
+        <button onClick={handleReferClick} className="refer-button">
+            Refer
+        </button>
+
       </div>
     </div>
   );
