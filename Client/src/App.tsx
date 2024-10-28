@@ -31,7 +31,7 @@ function App() {
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
   const [address, setAddress] = useState<`0x${string}` | undefined>(undefined); // Allows `undefined` or addresses of type `0x${string}`
-  const levelRequirements = [2, 5, 10, 15];
+  const levelRequirements = [100,200,300,400,500];
 
   const { isConnected } = useAccount();
   const account = useAccount();
@@ -221,14 +221,31 @@ function App() {
             style={{ left: '235px', top: '260px', width: '90px', height: '90px' }}
           />
         )}
-        {showPlusoneImage && newImagePosition && (
+        {/* {showPlusoneImage   && (
+          <div>
           <img
             src={PlusoneImage}
             alt="New Action"
-            className="new-action-image"
+            className="new-action-image absolute z-30"
             style={{ left: '123px', top: '168px', width: '30px', height: '80px' }}
           />
-        )}
+          <p className="text-white text-3xl">wertyuiokjhgfdxcvbn</p>
+          </div>
+        )} */}
+       {showPlusoneImage && newImagePosition && (
+  <img
+    src={PlusoneImage}
+    alt="New Action"
+    className={`new-action-image ${showPlusoneImage ? "show" : "hide"}`}
+    style={{
+      position: 'absolute', // Ensure the image is positioned absolutely
+      left:"123px", // Use x coordinate from newImagePosition
+      top: "168px", // Use y coordinate from newImagePosition
+      width: '30px', // Set desired width
+      height: '80px', // Set desired height
+    }}
+  />
+)}
          {showRedImage && (
           <img
             src={RedImage}
@@ -238,12 +255,14 @@ function App() {
           />
         )}
         {showRedhandImage && (
+         
           <img
             src={RedhandImage}
             alt="Level Up"
-            className="absolute fade-in-levelup level-up-animation slowFadeInOut"
-            style={{ left: '235px', top: '260px', width: '90px', height: '90px' }}
+            className="absolute w-fit fade-in-levelup level-up-animation slowFadeInOut "
+            style={{ left: '235px', top: '260px', width: '900px', height: '900px' }}
           />
+        
         )}
         {!isFirstImage && (
           <div className="absolute text-black text-3xl z-20 fade-in" style={{ top: "148px", right: "35px" }}>
