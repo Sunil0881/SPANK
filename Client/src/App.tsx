@@ -7,10 +7,12 @@ import PlusoneImage from "../src/assets/One.png";
 import RedImage from "../src/assets/Red.png"
 import loadingImage from "../src/assets/splashscreen.png"; 
 import RedhandImage from "../src/assets/redhand.png"; // Import the level-up image
+import walletlogo from "../src/assets/walletbtn.png";
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import CustomButton from "./Components/CustomButton";
 import { useAccount } from 'wagmi';
 import {dev, local} from "./Constant";
+import { ethers } from "ethers";
 import "./App.css";
 
 
@@ -33,14 +35,15 @@ function App() {
   const [level, setLevel] = useState(1);
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
-  const [address, setAddress] = useState<`0x${string}` | undefined>(undefined);
+  const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(true); // Allows undefined or addresses of type 0x${string}
   const [progress, setProgress] = useState(0); 
+  const [isConnected, setIsConnected] = useState(false);
   const levelRequirements = [5,10,100,200,300,400,500];
 
-    const { isConnected } = useAccount();
-    const account = useAccount();
-    const fetchedaddress = account.address;
+    // const { isConnected } = useAccount();  
+    // const account = useAccount();
+    // const fetchedaddress = account.address;
 
   useEffect(() => {
     const duration = 3000; // Total loading duration in milliseconds
@@ -63,18 +66,76 @@ function App() {
     };
   }, []);
   
+  const checkIfWalletIsConnected = async () => {
+    if (window.ethereum) {
+        try {
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const accounts = await provider.listAccounts();
+            const signer = provider.getSigner();
 
- 
-  useEffect(() => {
-   
-    if (isConnected) {
-      setIsWalletConnected(true);
-      setAddress(fetchedaddress);
+            console.log("Signer:", signer);
+
+            // If there are any accounts, set the wallet as connected
+            if (accounts.length > 0) {
+                const connectedAccount = accounts[0];
+                setAddress(connectedAccount);
+                setIsConnected(true);
+                setIsWalletConnected(true);
+
+                console.log("Connected Account:", connectedAccount);
+                console.log("Wallet is connected:", true);
+            } else {
+                setIsConnected(false);
+                setIsWalletConnected(false);
+
+                console.log("No account connected.");
+                console.log("Wallet is connected:", false);
+            }
+        } catch (error) {
+            console.error("Error checking wallet connection:", error);
+        }
     } else {
-      setIsWalletConnected(false);
-      setAddress(undefined);
+        console.log("MetaMask is not installed");
     }
-  }, [isConnected]);
+};
+
+
+const connectWallet = async () => {
+  if (window.ethereum) {
+      try {
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
+          const accounts = await provider.send("eth_requestAccounts", []);
+          const signer = provider.getSigner();
+          console.log("signer",signer);
+          if (accounts.length > 0) {
+            setAddress(accounts[0]);
+            console.log(accounts[0]);
+              setIsConnected(true);
+              setIsWalletConnected(true);
+          }
+      } catch (error) {
+          console.error('Error connecting to wallet:', error);
+      }
+  } else {
+      alert('Please install MetaMask to use this feature.');
+  }
+};
+ 
+  // useEffect(() => {
+   
+  //   if (isConnected) {
+  //     setIsWalletConnected(true);
+  //     setAddress(fetchedaddress);
+  //   } else {
+  //     setIsWalletConnected(false);
+  //     setAddress(undefined);
+  //   }
+  // }, [isConnected]);
+
+  useEffect(() => {
+    checkIfWalletIsConnected();
+    
+}, []);
 
   // Fetch user data when the wallet is connected
   useEffect(() => {
@@ -299,9 +360,20 @@ const handleReferClick = async () => {
           />
         )}
         {isFirstImage && (
-          <div className="absolute top-2 z-20">
+          <div className="">
             {/* <ConnectButton /> */}
-            <CustomButton />
+            {/* <CustomButton /> */}
+          
+            <button onClick={connectWallet} type="button" className="">
+                  <img
+            src={walletlogo}
+            alt="playbtn"
+         
+             className="absolute w-12 h-20 object-cover z-36 cursor-pointer  transition-opacity duration-700 ease-out  left-48"
+             style={{  top: '142px', width: '', height: '' }}
+          />
+                  </button>
+
           </div>
         )}
         {showSpankImage && lastActionCoordinates && (
@@ -365,9 +437,9 @@ const handleReferClick = async () => {
           </div>
         )}
 
-        <button onClick={handleReferClick} className="refer-button">
+        {/* <button onClick={handleReferClick} className="refer-button">
             Refer
-        </button>
+        </button> */}
 
       </div>
     </div>
