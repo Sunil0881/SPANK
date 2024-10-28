@@ -8,6 +8,7 @@ import RedImage from "../src/assets/Red.png"
 import loadingImage from "../src/assets/splashscreen.png"; 
 import RedhandImage from "../src/assets/redhand.png"; // Import the level-up image
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import CustomButton from "./Components/CustomButton";
 import { useAccount } from 'wagmi';
 import {dev, local} from "./Constant";
 import "./App.css";
@@ -265,12 +266,13 @@ animateProgress();
             src={playbtn}
             alt="playbtn"
             onClick={handleClick}
-            className="absolute w-20 h-20 object-cover z-20 cursor-pointer transition-opacity duration-700 ease-out"
+            className="absolute w-12 h-20 object-cover z-20 cursor-pointer bottom-7 transition-opacity duration-700 ease-out right-48"
           />
         )}
         {isFirstImage && (
-          <div className="absolute bottom-7 z-20">
-            <ConnectButton />
+          <div className="absolute top-2 z-20">
+            {/* <ConnectButton /> */}
+            <CustomButton />
           </div>
         )}
         {showSpankImage && lastActionCoordinates && (
