@@ -31,7 +31,7 @@ function App() {
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
   const [address, setAddress] = useState<`0x${string}` | undefined>(undefined); // Allows `undefined` or addresses of type `0x${string}`
-  const levelRequirements = [100,200,300,400,500];
+  const levelRequirements = [5,10,100,200,300,400,500];
 
   const { isConnected } = useAccount();
   const account = useAccount();
@@ -221,17 +221,7 @@ function App() {
             style={{ left: '235px', top: '260px', width: '90px', height: '90px' }}
           />
         )}
-        {/* {showPlusoneImage   && (
-          <div>
-          <img
-            src={PlusoneImage}
-            alt="New Action"
-            className="new-action-image absolute z-30"
-            style={{ left: '123px', top: '168px', width: '30px', height: '80px' }}
-          />
-          <p className="text-white text-3xl">wertyuiokjhgfdxcvbn</p>
-          </div>
-        )} */}
+       
        {showPlusoneImage && newImagePosition && (
   <img
     src={PlusoneImage}
@@ -260,7 +250,7 @@ function App() {
             src={RedhandImage}
             alt="Level Up"
             className="absolute w-fit fade-in-levelup level-up-animation slowFadeInOut "
-            style={{ left: '235px', top: '260px', width: '900px', height: '900px' }}
+            style={{ left: '235px', top: '260px', width: '90px', height: '90px' }}
           />
         
         )}
