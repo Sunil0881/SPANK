@@ -37,9 +37,9 @@ function App() {
   const [progress, setProgress] = useState(0); 
   const levelRequirements = [5,10,100,200,300,400,500];
 
-  const { isConnected } = useAccount();
-  const account = useAccount();
-  const fetchedaddress = account.address;
+    const { isConnected } = useAccount();
+    const account = useAccount();
+    const fetchedaddress = account.address;
 
   useEffect(() => {
     const duration = 3000; // Total loading duration in milliseconds
@@ -65,11 +65,15 @@ function App() {
 
  
   useEffect(() => {
-    if (isConnected && fetchedaddress) {
-      setIsWalletConnected(isConnected);
+   
+    if (isConnected) {
+      setIsWalletConnected(true);
       setAddress(fetchedaddress);
+    } else {
+      setIsWalletConnected(false);
+      setAddress(undefined);
     }
-  }, [isConnected, fetchedaddress]);
+  }, [isConnected]);
 
   // Fetch user data when the wallet is connected
   useEffect(() => {
@@ -104,7 +108,7 @@ function App() {
 
   // Update user data every 5 seconds if connected
   useEffect(() => {
-    let intervalId;
+    let intervalId:any;
 
     if (isConnected && address) {
       intervalId = setInterval(() => {
