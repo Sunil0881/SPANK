@@ -31,7 +31,7 @@ mongoose
 
   app.post('/api/user', async (req, res) => {
     console.log(req.body); // Log the incoming request body
-    const { address } = req.body;
+    const { address, referralCode } = req.body; // Extract address and referral code
 
     try {
         // Check if the user already exists
@@ -49,8 +49,21 @@ mongoose
 
         // User does not exist, create a new user
         user = new User({ address });
+
+        // If a referral code is provided, find the referrer
+        if (referralCode) {
+            const referrer = await User.findOne({ referralCode });
+            if (referrer) {
+                user.referredBy = referrer.address; // Set the referrer address
+                referrer.referralCount += 1; // Increment the referrer’s count
+                referrer.referrals.push(address); // Add the new user to the referrer’s referral list
+                await referrer.save(); // Save the updated referrer data
+            }
+        }
+
         await user.save();
-        console.log("user created");
+        console.log("User created");
+
         // Return user details including the generated referral code
         return res.status(201).json({
             message: "User created.",
@@ -58,12 +71,13 @@ mongoose
             level: user.level,
             referralCode: user.referralCode,
         });
-      
+
     } catch (error) {
         console.error("Error in POST /api/user:", error);
         return res.status(500).json({ message: "Server error.", error: error.message });
     }
 });
+
 
 
 app.put('/api/user/update', async (req, res) => {

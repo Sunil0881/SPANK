@@ -37,6 +37,7 @@ function App() {
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
   const [address, setAddress] = useState("");
+  const [shareLink, setShareLink] = useState('');
   const [loading, setLoading] = useState(true); // Allows undefined or addresses of type 0x${string}
   const [progress, setProgress] = useState(0); 
   const [isConnected, setIsConnected] = useState(false);
@@ -152,12 +153,17 @@ const disconnectWallet = () => {
     const fetchUserData = async () => {
       if (isConnected && address) {
         try {
+          // Get the referral code from the URL
+          const urlParams = new URLSearchParams(window.location.search);
+          const referralCode = urlParams.get('referral') || ''; // Default to empty string if not present
+          console.log("referralCode",referralCode);
+
           const response = await fetch(`${local}/api/user`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ address }),
+            body: JSON.stringify({ address, referralCode }), // Pass referralCode to backend
           });
 
           if (!response.ok) {
@@ -167,8 +173,8 @@ const disconnectWallet = () => {
           const data = await response.json();
           setUserData(data);
           setScore(data.score ?? 0); // Fallback to 0 if score is missing
-          setLevel(data.level ?? 1);
-          setCode(data.referralCode ?? 1); // Fallback to 1 if level is missing
+          setLevel(data.level ?? 1); // Fallback to 1 if level is missing
+          setCode(data.referralCode ?? ''); // Fallback to empty string if referralCode is missing
           console.log(data);
         } catch (error: any) {
           setError(error.message);
@@ -178,6 +184,7 @@ const disconnectWallet = () => {
 
     fetchUserData();
   }, [isConnected, address]);
+
 
   // Update user data every 5 seconds if connected
   useEffect(() => {
@@ -306,24 +313,51 @@ function animateProgress() {
 
 animateProgress();
 
-
 const handleReferClick = async () => {
   try {
-      const response = await fetch('/api/getReferralCode');
-      const data = await response.json();
-      if (data.referralCode) {
-          // Generate the shareable link with referral code
-          const referralUrl = `https://x.com/Sunil_0881/status/1850892353780748624?referral=${data.referralCode}`;
-          setShareLink(referralUrl);
-
-          // Optionally, copy the link to clipboard or open it in a new tab
-          navigator.clipboard.writeText(referralUrl);
-          alert('Referral link copied to clipboard!');
-      }
+    // Generate the shareable link with referral code
+    const referralUrl = `https://x.com/Sunil_0881/status/1850935854539383234?referral=${code}`;
+                       
+    
+    // Call the share function directly with the referralUrl
+    shareReferralLink(referralUrl);
+    
   } catch (error) {
-      console.error('Error fetching referral code:', error);
+    console.error('Error fetching referral code:', error);
   }
 };
+
+const shareReferralLink = (shareLink) => {
+  // Create a WhatsApp share URL
+  const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareLink)}`;
+
+  // You can create similar URLs for other platforms if needed
+  const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareLink)}`;
+  const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareLink)}`;
+
+  // Use the Web Share API if supported
+  if (navigator.share) {
+    navigator.share({
+      title: 'Check out this referral link!',
+      url: shareLink,
+    }).then(() => {
+      console.log('Referral link shared successfully');
+    }).catch((error) => {
+      console.error('Error sharing:', error);
+      // Fallback to WhatsApp sharing if Web Share API fails
+      window.open(whatsappUrl, '_blank');
+    });
+  } else {
+    // If Web Share API is not supported, provide WhatsApp link
+    const userChoice = window.confirm('Share on WhatsApp? Click OK to share on WhatsApp, Cancel to open in a new tab.');
+    if (userChoice) {
+      window.open(whatsappUrl, '_blank');
+    } else {
+      window.open(facebookUrl, '_blank'); // or any other platform
+    }
+  }
+};
+
   
  
 
@@ -451,11 +485,11 @@ const handleReferClick = async () => {
             {message}
           </div>
         )}
-
-        {/* <button onClick={handleReferClick} className="refer-button">
-            Refer
-        </button> */}
-
+       {isFirstImage && (
+            <button onClick={handleReferClick} className=" absolute px-2 py-1refer-button z-30 bg-red-500 rounded-full bottom-7 left-5">
+                Refer
+            </button> 
+        )}
       </div>
     </div>
   );
