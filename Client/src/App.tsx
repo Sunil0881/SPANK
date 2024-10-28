@@ -239,6 +239,7 @@ animateProgress();
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-75 z-50">
             <img
               src={loadingImage}
+              loading="lazy"
               alt="Loading"
               style={{ width: "514px", height: "250px" }}
               className="absolute"
@@ -256,6 +257,7 @@ animateProgress();
         <img
           ref={imageRef}
           src={isFirstImage ? ButtonPage : ZoomGirl}
+          loading="lazy"
           alt="MainImage"
           onClick={isFirstImage ? handleImageClick : handleImageClick}
           className={`${isFirstImage ? "object-cover w-full h-full" : "object-contain"}`}
@@ -265,6 +267,7 @@ animateProgress();
         {isVisible && (
           <img
             src={playbtn}
+            loading="lazy"
             alt="playbtn"
             onClick={handleClick}
             className="absolute w-12 h-20 object-cover z-20 cursor-pointer bottom-7 transition-opacity duration-700 ease-out right-48"
@@ -279,6 +282,7 @@ animateProgress();
         {showSpankImage && lastActionCoordinates && (
           <img
             src={ActionImage}
+            loading="lazy"
             alt="Action"
             className="absolute action-image"
             style={{ left: '235px', top: '260px', width: '90px', height: '90px' }}
@@ -288,6 +292,7 @@ animateProgress();
        {showPlusoneImage && newImagePosition && (
   <img
     src={PlusoneImage}
+    loading="lazy"
     alt="New Action"
     className={`new-action-image ${showPlusoneImage ? "show" : "hide"}`}
     style={{
@@ -302,6 +307,7 @@ animateProgress();
          {showRedImage && (
           <img
             src={RedImage}
+            loading="lazy"
             alt="red "
             className="absolute "
             style={{ left: '235px', top: '260px', width: '90px', height: '90px' }}
@@ -311,6 +317,7 @@ animateProgress();
          
           <img
             src={RedhandImage}
+            loading="lazy"
             alt="Level Up"
             className="absolute w-fit fade-in-levelup level-up-animation slowFadeInOut "
             style={{ left: '235px', top: '260px', width: '90px', height: '90px' }}
