@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import GirlFull from "../src/assets/GirlFull.png";
+import ButtonPage from "../src/assets/ButtonPage.png";
 import ZoomGirl from "../src/assets/ZoomGirl.png";
-import startbtn from "../src/assets/startbtn.png";
+import playbtn from "../src/assets/playbtn.png";
 import ActionImage from "../src/assets/Spank.png";
 import PlusoneImage from "../src/assets/One.png";
 import RedImage from "../src/assets/Red.png"
+import loadingImage from "../src/assets/splashscreen.png"; 
 import RedhandImage from "../src/assets/redhand.png"; // Import the level-up image
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
@@ -30,12 +31,37 @@ function App() {
   const [level, setLevel] = useState(1);
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
-  const [address, setAddress] = useState<`0x${string}` | undefined>(undefined); // Allows `undefined` or addresses of type `0x${string}`
+  const [address, setAddress] = useState<`0x${string}` | undefined>(undefined);
+  const [loading, setLoading] = useState(true); // Allows undefined or addresses of type 0x${string}
+  const [progress, setProgress] = useState(0); 
   const levelRequirements = [5,10,100,200,300,400,500];
 
   const { isConnected } = useAccount();
   const account = useAccount();
   const fetchedaddress = account.address;
+
+  useEffect(() => {
+    const duration = 3000; // Total loading duration in milliseconds
+    const interval = 100;  // Interval in milliseconds for progress update
+    const increment = 100 / (duration / interval); // Progress increment per interval
+  
+    const loadingTimeout = setInterval(() => {
+      setProgress((prev) => (prev + increment >= 100 ? 100 : prev + increment));
+    }, interval);
+  
+    // Clear timeout after the total duration to stop loading
+    const finishLoading = setTimeout(() => {
+      setLoading(false);
+      setProgress(100); // Ensure progress is exactly 100% at the end
+    }, duration);
+  
+    return () => {
+      clearTimeout(finishLoading);
+      clearInterval(loadingTimeout);
+    };
+  }, []);
+  
+
  
   useEffect(() => {
     if (isConnected && fetchedaddress) {
@@ -186,24 +212,58 @@ function App() {
     }
   }, [isVisible]);
 
+  let progressElement = document.querySelector('.progress') as HTMLElement | null;
+let width = 0;
+
+function animateProgress() {
+  if (progressElement) { // Check if progressElement is not null
+    if (width < 100) {
+      width += 25; // Adjust speed if needed
+      progressElement.style.width = width + '%';
+      requestAnimationFrame(animateProgress);
+    }
+  }
+}
+
+animateProgress();
+  
+ 
+
   return (
-    <div className="relative flex items-center justify-center h-screen bg-black">
+    <div className="relative flex items-center justify-center h-screen bg-black ">
+    
       <div className="relative w-[1000px] h-[1000px] flex items-center justify-center">
+      {loading && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-75 z-50">
+            <img
+              src={loadingImage}
+              alt="Loading"
+              style={{ width: "514px", height: "250px" }}
+              className="absolute"
+            />
+                    <div className="loader-container">
+          <div className="loading-bar absolute mt-44">
+            <div className="progress"></div>
+          </div>
+          <div className="loading-text ">LOADING...</div>
+        </div>
+
+          </div>
+        )}
+
         <img
           ref={imageRef}
-          src={isFirstImage ? GirlFull : ZoomGirl}
+          src={isFirstImage ? ButtonPage : ZoomGirl}
           alt="MainImage"
           onClick={isFirstImage ? handleImageClick : handleImageClick}
           className={`${isFirstImage ? "object-cover w-full h-full" : "object-contain"}`}
-          style={isFirstImage ? {} : { width: "515px", height: "515px" }}
+          style={isFirstImage ? {width: "514px", height: "250px"} : { width: "515px", height: "515px" }}
         />
-        {isVisible && (
-          <div className="absolute inset-0 bg-black opacity-50 z-10 transition-opacity duration-700 ease-out" />
-        )}
+       
         {isVisible && (
           <img
-            src={startbtn}
-            alt="startbtn"
+            src={playbtn}
+            alt="playbtn"
             onClick={handleClick}
             className="absolute w-20 h-20 object-cover z-20 cursor-pointer transition-opacity duration-700 ease-out"
           />
