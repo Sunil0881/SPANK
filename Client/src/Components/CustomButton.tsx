@@ -1,6 +1,7 @@
 
 import '@rainbow-me/rainbowkit/styles.css';
 import walletlogo from "../assets/walletbtn.png"
+import disconnectbtn from "../assets/disconnectwlt.png";
 import {ConnectButton} from '@rainbow-me/rainbowkit';
 
 
@@ -51,8 +52,8 @@ const CustomButton = () => {
             src={walletlogo}
             alt="playbtn"
          
-             className="absolute w-12 h-20 object-cover z-20 cursor-pointer bottom-6 transition-opacity duration-700 ease-out top-36 right-12"
-             style={{  top: '134px', width: '', height: '' }}
+             className="absolute w-12 h-20 object-cover z-20 cursor-pointer bottom-6 transition-opacity duration-700 ease-out  "
+             style={{  top: '76px', width: '', right: '55px' }}
           />
          
                    </button>
@@ -68,10 +69,11 @@ const CustomButton = () => {
               }
 
               return (
-                <div style={{ display: 'flex', gap: 12 }}>
+                <div style={{ display: 'flex', gap: 12 }} className=''>
                   <button
+                  className=''
                     onClick={openChainModal}
-                    style={{ display: 'flex', alignItems: 'center' }}
+                    style={{ display: 'flex', alignItems: 'center'}}
                     type="button"
                   >
                     {chain.hasIcon && (
@@ -97,13 +99,13 @@ const CustomButton = () => {
                     {chain.name}
                   </button>
 
-                  <button onClick={openAccountModal} type="button">
+                  <button onClick={openAccountModal} type="button" className=''>
                   <img
-            src={walletlogo}
-            alt="playbtn"
+            src={disconnectbtn}
+            alt="wltbtn"
          
-             className="absolute w-12 h-20 object-cover z-20 cursor-pointer bottom-6 transition-opacity duration-700 ease-out top-36 right-16"
-             style={{  top: '134px', width: '', height: '' }}
+             className="absolute w-12 h-20 object-cover z-20 cursor-pointer bottom-6 transition-opacity duration-700 ease-out left-48"
+             style={{  top: '29px', width: '', left: '5px' }}
           />
                   </button>
                 </div>

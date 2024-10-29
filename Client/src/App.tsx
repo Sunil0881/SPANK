@@ -36,16 +36,16 @@ function App() {
   const [level, setLevel] = useState(1);
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
-  const [address, setAddress] = useState("");
+  const [address, setAddress] = useState<`0x${string}` | undefined>(undefined);
   const [shareLink, setShareLink] = useState('');
   const [loading, setLoading] = useState(true); // Allows undefined or addresses of type 0x${string}
   const [progress, setProgress] = useState(0); 
-  const [isConnected, setIsConnected] = useState(false);
+  
   const levelRequirements = [5,10,100,200,300,400,500];
 
-    // const { isConnected } = useAccount();  
-    // const account = useAccount();
-    // const fetchedaddress = account.address;
+    const { isConnected } = useAccount();  
+    const account = useAccount();
+    const fetchedaddress = account.address;
 
   useEffect(() => {
     const duration = 3000; // Total loading duration in milliseconds
@@ -68,85 +68,85 @@ function App() {
     };
   }, []);
   
-  const checkIfWalletIsConnected = async () => {
-    if (window.ethereum) {
-        try {
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const accounts = await provider.listAccounts();
-            const signer = provider.getSigner();
+//   const checkIfWalletIsConnected = async () => {
+//     if (window.ethereum) {
+//         try {
+//             const provider = new ethers.providers.Web3Provider(window.ethereum);
+//             const accounts = await provider.listAccounts();
+//             const signer = provider.getSigner();
 
-            console.log("Signer:", signer);
+//             console.log("Signer:", signer);
 
-            // If there are any accounts, set the wallet as connected
-            if (accounts.length > 0) {
-                const connectedAccount = accounts[0];
-                setAddress(connectedAccount);
-                setIsConnected(true);
-                setIsWalletConnected(true);
+//             // If there are any accounts, set the wallet as connected
+//             if (accounts.length > 0) {
+//                 const connectedAccount = accounts[0];
+//                 setAddress(connectedAccount);
+               
+//                 setIsWalletConnected(true);
 
-                console.log("Connected Account:", connectedAccount);
-                console.log("Wallet is connected:", true);
-            } else {
-                setIsConnected(false);
-                setIsWalletConnected(false);
+//                 console.log("Connected Account:", connectedAccount);
+//                 console.log("Wallet is connected:", true);
+//             } else {
+              
+//                 setIsWalletConnected(false);
 
-                console.log("No account connected.");
-                console.log("Wallet is connected:", false);
-            }
-        } catch (error) {
-            console.error("Error checking wallet connection:", error);
-        }
-    } else {
-        console.log("MetaMask is not installed");
-    }
-};
+//                 console.log("No account connected.");
+//                 console.log("Wallet is connected:", false);
+//             }
+//         } catch (error) {
+//             console.error("Error checking wallet connection:", error);
+//         }
+//     } else {
+//         console.log("MetaMask is not installed");
+//     }
+// };
 
 
-const connectWallet = async () => {
-  if (window.ethereum) {
-      try {
-          const provider = new ethers.providers.Web3Provider(window.ethereum);
-          const accounts = await provider.send("eth_requestAccounts", []);
-          const signer = provider.getSigner();
-          console.log("signer",signer);
-          if (accounts.length > 0) {
-            setAddress(accounts[0]);
-            console.log(accounts[0]);
-              setIsConnected(true);
-              setIsWalletConnected(true);
-          }
-      } catch (error) {
-          console.error('Error connecting to wallet:', error);
-      }
-  } else {
-      alert('Please install MetaMask to use this feature.');
-  }
-};
+// const connectWallet = async () => {
+//   if (window.ethereum) {
+//       try {
+//           const provider = new ethers.providers.Web3Provider(window.ethereum);
+//           const accounts = await provider.send("eth_requestAccounts", []);
+//           const signer = provider.getSigner();
+//           console.log("signer",signer);
+//           if (accounts.length > 0) {
+//             setAddress(accounts[0]);
+//             console.log(accounts[0]);
+             
+//               setIsWalletConnected(true);
+//           }
+//       } catch (error) {
+//           console.error('Error connecting to wallet:', error);
+//       }
+//   } else {
+//       alert('Please install MetaMask to use this feature.');
+//   }
+// };
  
 
-const disconnectWallet = () => {
-  setAddress(null); // Clear the address state
-  setIsConnected(false); // Update connection state
-  setIsWalletConnected(false); // Update wallet connection state
-  console.log("Wallet disconnected");
-};
+// const disconnectWallet = () => {
+//   setAddress(null); // Clear the address state
+//   setIsConnected(false); // Update connection state
+//   setIsWalletConnected(false); // Update wallet connection state
+//   console.log("Wallet disconnected");
+// };
 
 
-  // useEffect(() => {
+useEffect(() => {
    
-  //   if (isConnected) {
-  //     setIsWalletConnected(true);
-  //     setAddress(fetchedaddress);
-  //   } else {
-  //     setIsWalletConnected(false);
-  //     setAddress(undefined);
-  //   }
-  // }, [isConnected]);
+  if (isConnected) {
+    setIsWalletConnected(true);
+    setAddress(fetchedaddress);
+  } else {
+    setIsWalletConnected(false);
+    setAddress(undefined);
+  }
+}, [isConnected]);
 
-  useEffect(() => {
-    checkIfWalletIsConnected();
+//   useEffect(() => {
+//     checkIfWalletIsConnected();
     
-}, []);
+// }, []);
 
   // Fetch user data when the wallet is connected
   useEffect(() => {
@@ -400,14 +400,15 @@ const shareReferralLink = (shareLink) => {
             loading="lazy"
             alt="playbtn"
             onClick={handleClick}
-            className="absolute w-12 h-20 object-cover z-20 cursor-pointer bottom-7 transition-opacity duration-700 ease-out right-48"
+            className="absolute w-12 h-20 object-cover z-20 cursor-pointer bottom-7 transition-opacity duration-700 ease-out "
+            style={{ right: "190px" }}
           />
         )}
         {isFirstImage && (
-          <div className="">
+          <div className="absolute">
             {/* <ConnectButton /> */}
-            {/* <CustomButton /> */}
-            {!isWalletConnected ? (
+              <CustomButton /> 
+           {/* {!isWalletConnected ? (
                 <button onClick={connectWallet} type="button" className="">
                   <img src={walletlogo} alt="playbtn"
                     className="absolute w-12 h-20 object-cover z-36 cursor-pointer  transition-opacity duration-700 ease-out  left-48"
@@ -415,14 +416,14 @@ const shareReferralLink = (shareLink) => {
                 </button>
             ) : (
               <div>
-              {/* <p>Connected as: {address}</p> */}
+             
               <button onClick={disconnectWallet}  className="">
               <img src={disconnectwlt} alt="playbtn"
                     className="absolute w-12 h-20 object-cover z-36 cursor-pointer  transition-opacity duration-700 ease-out  left-48"
                     style={{  top: '142px', width: '', height: '' }} />
               </button>
           </div>
-      )}
+      )} */}
           </div>
         )}
         {showSpankImage && lastActionCoordinates && (
