@@ -15,6 +15,10 @@
     <meta name="twitter:player" content="https://spank-tau.vercel.app/">
     <meta name="twitter:app:player" content="https://spank-tau.vercel.app/">
     <meta name="x:app:player" content="https://spank-tau.vercel.app/">
+    <meta name="twitter:player" content="" id="twitter-player" />
+    <meta name="twitter:app:player" content="" id="twitter-app-player" />
+    <meta name="x:app:player" content="" id="x-app-player" />
+
     <meta name="twitter:player:width" content="360">
     <meta name="twitter:player:height" content="460">
     <meta name="twitter:app:player:width" content="360">
@@ -26,6 +30,27 @@
       name="Spank Me"
       content="Spank on X"
     />
+
+    <script>
+      // Function to dynamically set the content of the meta tags
+      function setMetaTags() {
+        // Get the query parameters from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const playerParam = urlParams.get('referral'); // e.g., ?player=https://your-url.com
+
+        // Check if the 'player' parameter is available in the URL
+        if (playerParam) {
+          // Dynamically update the content of the Twitter Player meta tags
+          document.getElementById('twitter-player').setAttribute('content', playerParam);
+          document.getElementById('twitter-app-player').setAttribute('content', playerParam);
+          document.getElementById('x-app-player').setAttribute('content', playerParam);
+        }
+      }
+
+      // Execute the function after the page has loaded
+      window.onload = setMetaTags;
+    </script>
+
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css">
     <title>Spank Me</title>

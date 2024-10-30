@@ -1,19 +1,14 @@
-
 import '@rainbow-me/rainbowkit/styles.css';
-import walletlogo from "../assets/walletbtn.png"
+import walletlogo from "../assets/walletbtn.png";
 import disconnectbtn from "../assets/disconnectwlt.png";
-import {ConnectButton} from '@rainbow-me/rainbowkit';
-
-
-
-
-
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useAccount } from 'wagmi';
 
 const CustomButton = () => {
+  const { isConnected } = useAccount(); // Get wallet connection status
+
   return (
-    
-       
-      <ConnectButton.Custom>
+    <ConnectButton.Custom>
       {({
         account,
         chain,
@@ -23,21 +18,18 @@ const CustomButton = () => {
         authenticationStatus,
         mounted,
       }) => {
-        // Note: If your app doesn't use authentication, you
-        // can remove all 'authenticationStatus' checks
         const ready = mounted && authenticationStatus !== 'loading';
         const connected =
           ready &&
           account &&
           chain &&
-          (!authenticationStatus ||
-            authenticationStatus === 'authenticated');
+          (!authenticationStatus || authenticationStatus === 'authenticated');
 
         return (
           <div
             {...(!ready && {
               'aria-hidden': true,
-              'style': {
+              style: {
                 opacity: 0,
                 pointerEvents: 'none',
                 userSelect: 'none',
@@ -47,16 +39,14 @@ const CustomButton = () => {
             {(() => {
               if (!connected) {
                 return (
-                   <button onClick={openConnectModal} type="button" className='w-20 h-28'>
-                   <img
-            src={walletlogo}
-            alt="playbtn"
-         
-             className="absolute w-12 h-20 object-cover z-20 cursor-pointer bottom-6 transition-opacity duration-700 ease-out  "
-             style={{  top: '76px', width: '', right: '55px' }}
-          />
-         
-                   </button>
+                  <button onClick={openConnectModal} type="button" className="w-20 h-28">
+                    <img
+                      src={walletlogo}
+                      alt="connect"
+                      className="absolute w-12 h-20 object-cover z-20 cursor-pointer bottom-6 transition-opacity duration-700 ease-out"
+                      style={{ top: '76px', right: '55px' }}
+                    />
+                  </button>
                 );
               }
 
@@ -69,11 +59,10 @@ const CustomButton = () => {
               }
 
               return (
-                <div style={{ display: 'flex', gap: 12 }} className=''>
+                <div style={{ display: 'flex', gap: 12 }}>
                   <button
-                  className=''
                     onClick={openChainModal}
-                    style={{ display: 'flex', alignItems: 'center'}}
+                    style={{ display: 'flex', alignItems: 'center' }}
                     type="button"
                   >
                     {chain.hasIcon && (
@@ -99,14 +88,13 @@ const CustomButton = () => {
                     {chain.name}
                   </button>
 
-                  <button onClick={openAccountModal} type="button" className=''>
-                  <img
-            src={disconnectbtn}
-            alt="wltbtn"
-         
-             className="absolute w-12 h-20 object-cover z-20 cursor-pointer bottom-6 transition-opacity duration-700 ease-out left-48"
-             style={{  top: '29px', width: '', left: '5px' }}
-          />
+                  <button onClick={openAccountModal} type="button">
+                    <img
+                      src={isConnected ? disconnectbtn : walletlogo} // Switch based on isConnected status
+                      alt={isConnected ? "disconnect" : "connect"}
+                      className="absolute w-12 h-20 object-cover z-20 cursor-pointer bottom-6 transition-opacity duration-700 ease-out"
+                      style={{ top: '29px', left: '5px' }}
+                    />
                   </button>
                 </div>
               );
@@ -115,8 +103,7 @@ const CustomButton = () => {
         );
       }}
     </ConnectButton.Custom>
-       
-  )
-}
+  );
+};
 
-export default CustomButton
+export default CustomButton;
