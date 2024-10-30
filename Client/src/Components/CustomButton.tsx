@@ -5,7 +5,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
 
 const CustomButton = () => {
-  const { isConnected } = useAccount(); // Get wallet connection status
+  const { isConnected } = useAccount(); // Check if the wallet is connected
 
   return (
     <ConnectButton.Custom>
@@ -37,6 +37,7 @@ const CustomButton = () => {
             })}
           >
             {(() => {
+              // If wallet is not connected, show the connect button
               if (!connected) {
                 return (
                   <button onClick={openConnectModal} type="button" className="w-20 h-28">
@@ -50,6 +51,7 @@ const CustomButton = () => {
                 );
               }
 
+              // If chain is unsupported, show the chain error message
               if (chain.unsupported) {
                 return (
                   <button onClick={openChainModal} type="button">
@@ -58,6 +60,7 @@ const CustomButton = () => {
                 );
               }
 
+              // If wallet is connected, show the chain and disconnect buttons
               return (
                 <div style={{ display: 'flex', gap: 12 }}>
                   <button
@@ -90,9 +93,9 @@ const CustomButton = () => {
 
                   <button onClick={openAccountModal} type="button">
                     <img
-                      src={isConnected ? disconnectbtn : walletlogo} // Switch based on isConnected status
-                      alt={isConnected ? "disconnect" : "connect"}
-                      className="absolute w-12 h-20 object-cover z-20 cursor-pointer bottom-6 transition-opacity duration-700 ease-out"
+                      src={disconnectbtn}
+                      alt="disconnect"
+                      className="absolute w-12 h-20 object-cover z-20 cursor-pointer bottom-6 transition-opacity duration-700 ease-out left-48"
                       style={{ top: '29px', left: '5px' }}
                     />
                   </button>
