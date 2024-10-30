@@ -26,6 +26,7 @@ function App() {
   const [message, setMessage] = useState("");
   const [showMessage, setShowMessage] = useState(false);
   const [showSpankImage, setShowSpankImage] = useState(false);
+   const [urlparms, setUrlparms] = useState("");
   const [showPlusoneImage, setShowPlusoneImage] = useState(false);
   const [showRedhandImage, setShowRedhandImage] = useState(false); // New state for level-up image
   const [showRedImage, setShowRedImage] = useState(false);
@@ -153,10 +154,25 @@ useEffect(() => {
     const fetchUserData = async () => {
       if (isConnected && address) {
         try {
-          // Get the referral code from the URL
+         
           const urlParams = new URLSearchParams(window.location.search);
-          const referralCode = urlParams.get('referral') || ''; // Default to empty string if not present
-          console.log("referralCode",referralCode);
+          console.log("url",window.location.search);
+          const currentUrl = window.location.href;
+          const equalSignIndex = currentUrl.indexOf('=');
+
+          // If the '=' character is found
+          if (equalSignIndex !== -1) {
+            // Extract all characters after the '=' character
+            const valueAfterEqual = currentUrl.substring(equalSignIndex + 1);
+            setUrlparms(valueAfterEqual);
+            // Log the result to the console
+            console.log("Value after '=':", valueAfterEqual);
+          } else {
+            console.log("No '=' found in the URL.");
+          }
+
+          const referralCode = urlparms // Default to empty string if not present
+          console.log("referralCode : ",referralCode);
 
           const response = await fetch(`${dev}/api/user`, {
             method: 'POST',
