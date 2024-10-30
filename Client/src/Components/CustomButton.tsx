@@ -3,9 +3,21 @@ import walletlogo from "../assets/walletbtn.png";
 import disconnectbtn from "../assets/disconnectwlt.png";
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
+import { useEffect, useState } from 'react';
 
 const CustomButton = () => {
   const { isConnected } = useAccount(); // Check if the wallet is connected
+  const [connected, setConnected] = useState(false); // State to hold connection status
+
+  useEffect(() => {
+    // Reset the connection status on page reload or component mount
+    setConnected(false);
+  }, []);
+
+  useEffect(() => {
+    // Update connected status based on isConnected from useAccount
+    setConnected(isConnected);
+  }, [isConnected]);
 
   return (
     <ConnectButton.Custom>
@@ -19,11 +31,6 @@ const CustomButton = () => {
         mounted,
       }) => {
         const ready = mounted && authenticationStatus !== 'loading';
-        const connected =
-          ready &&
-          account &&
-          chain &&
-          (!authenticationStatus || authenticationStatus === 'authenticated');
 
         return (
           <div
