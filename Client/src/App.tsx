@@ -158,7 +158,7 @@ useEffect(() => {
           const referralCode = urlParams.get('referral') || ''; // Default to empty string if not present
           console.log("referralCode",referralCode);
 
-          const response = await fetch(`${local}/api/user`, {
+          const response = await fetch(`${dev}/api/user`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -205,7 +205,7 @@ useEffect(() => {
       const data = { address, score, level };
       console.log('Updating Data to DB');
       try {
-        const response = await fetch(`${local}/api/user/update`, {
+        const response = await fetch(`${dev}/api/user/update`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
