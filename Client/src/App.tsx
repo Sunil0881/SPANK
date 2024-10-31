@@ -149,57 +149,59 @@ useEffect(() => {
     
 // }, []);
 
-  // Fetch user data when the wallet is connected
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (isConnected && address) {
-        try {
-         
-          const urlParams = new URLSearchParams(window.location.search);
-          console.log("url",window.location.search);
-          const currentUrl = window.location.href;
-          const equalSignIndex = currentUrl.indexOf('=');
+// First useEffect to set `urlparms` based on the URL
+useEffect(() => {
+  const currentUrl = window.location.href;
+  const equalSignIndex = currentUrl.indexOf('=');
 
-          // If the '=' character is found
-          if (equalSignIndex !== -1) {
-            // Extract all characters after the '=' character
-            const valueAfterEqual = currentUrl.substring(equalSignIndex + 1);
-            setUrlparms(valueAfterEqual);
-            // Log the result to the console
-            console.log("Value after '=':", valueAfterEqual);
-          } else {
-            console.log("No '=' found in the URL.");
-          }
+  if (equalSignIndex !== -1) {
+    const valueAfterEqual = currentUrl.substring(equalSignIndex + 1);
+    console.log("Value after '=':", valueAfterEqual);
+    setUrlparms(valueAfterEqual); // Set `urlparms` here
+  } else {
+    console.log("No '=' found in the URL.");
+  }
+}, []); // This only runs once, on component mount
 
-          const referralCode = urlparms // Default to empty string if not present
-          console.log("referralCode : ",referralCode);
+// Second useEffect to log updated `urlparms` value
+useEffect(() => {
+  console.log("Updated urlparms in useEffect:", urlparms);
+}, [urlparms]);
 
-          const response = await fetch(`${dev}/api/user`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ address, referralCode }), // Pass referralCode to backend
-          });
+// Third useEffect to fetch user data when wallet is connected and `urlparms` is available
+useEffect(() => {
+  const fetchUserData = async () => {
+    if (isConnected && address && urlparms) { // Ensure `urlparms` is available
+      try {
+        console.log("Using referralCode:", urlparms);
+        const referralCode = urlparms;
 
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
+        const response = await fetch(`${dev}/api/user`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ address, referralCode }), // Pass referralCode to backend
+        });
 
-          const data = await response.json();
-          setUserData(data);
-          setScore(data.score ?? 0); // Fallback to 0 if score is missing
-          setLevel(data.level ?? 1); // Fallback to 1 if level is missing
-          setCode(data.referralCode ?? ''); // Fallback to empty string if referralCode is missing
-          console.log(data);
-        } catch (error: any) {
-          setError(error.message);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
         }
-      }
-    };
 
-    fetchUserData();
-  }, [isConnected, address]);
+        const data = await response.json();
+        setUserData(data);
+        setScore(data.score ?? 0); // Fallback to 0 if score is missing
+        setLevel(data.level ?? 1); // Fallback to 1 if level is missing
+        setCode(data.referralCode ?? ''); // Fallback to empty string if referralCode is missing
+        console.log(data);
+      } catch (error) {
+        setError(error.message);
+      }
+    }
+  };
+
+  fetchUserData();
+}, [isConnected, address, urlparms]); // Run this effect when `isConnected`, `address`, or `urlparms` changes
 
 
   // Update user data every 5 seconds if connected
