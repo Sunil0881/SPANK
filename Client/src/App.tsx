@@ -6,6 +6,7 @@ import ActionImage from "../src/assets/Spank.png";
 import PlusoneImage from "../src/assets/One.png";
 import RedImage from "../src/assets/Red.png"
 import loadingImage from "../src/assets/splashscreen.png"; 
+import Refbtn from "../src/assets/refbtn.png";
 import RedhandImage from "../src/assets/redhand.png"; // Import the level-up image
 import walletlogo from "../src/assets/walletbtn.png";
 import disconnectwlt from "../src/assets/disconnectwlt.png";
@@ -393,7 +394,7 @@ const shareReferralLink = (shareLink) => {
               className="absolute"
             />
                     <div className="loader-container">
-          <div className="loading-bar absolute mt-44">
+          <div className="loading-bar absolute mt-60">
             <div className="progress"></div>
           </div>
           <div className="loading-text ">LOADING...</div>
@@ -409,7 +410,7 @@ const shareReferralLink = (shareLink) => {
           alt="MainImage"
           onClick={isFirstImage ? handleImageClick : handleImageClick}
           className={`${isFirstImage ? "object-cover w-full h-full" : "object-contain"}`}
-          style={isFirstImage ? {width: "514px", height: "250px"} : { width: "515px", height: "515px" }}
+          style={isFirstImage ? {width: "514px", height: "515px"} : { width: "515px", height: "515px" }}
         />
        
         {isVisible && (
@@ -418,8 +419,8 @@ const shareReferralLink = (shareLink) => {
             loading="lazy"
             alt="playbtn"
             onClick={handleClick}
-            className="absolute w-12 h-20 object-cover z-20 cursor-pointer bottom-7 transition-opacity duration-700 ease-out "
-            style={{ right: "190px" }}
+            className="absolute w-16 h-24 object-cover z-20 cursor-pointer  transition-opacity duration-700 ease-out "
+            style={{ right: "190px", bottom:"119px" }}
           />
         )}
         {isFirstImage && (
@@ -505,8 +506,14 @@ const shareReferralLink = (shareLink) => {
           </div>
         )}
        {isFirstImage && (
-            <button onClick={handleReferClick} className=" absolute px-2 py-1refer-button z-30 bg-red-500 rounded-full bottom-7 left-5">
-                Refer
+            <button onClick={handleReferClick} className=" absolute  z-30 bottom-2 left-5">
+               <img
+            src={Refbtn}
+            loading="lazy"
+            alt="Ref btn"
+             
+             style={{  width: '65px', height: '65px' }}
+          />
             </button> 
         )}
       </div>

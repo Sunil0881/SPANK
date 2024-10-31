@@ -51,8 +51,8 @@ const CustomButton = () => {
                     <img
                       src={walletlogo}
                       alt="connect"
-                      className="absolute w-12 h-20 object-cover z-20 cursor-pointer bottom-6 transition-opacity duration-700 ease-out"
-                      style={{ top: '76px', right: '55px' }}
+                      className="absolute w-16 h-24 object-cover z-20 cursor-pointer bottom-6 transition-opacity duration-700 ease-out"
+                      style={{ top: '100px', right: '55px' }}
                     />
                   </button>
                 );
@@ -102,8 +102,8 @@ const CustomButton = () => {
                     <img
                       src={disconnectbtn}
                       alt="disconnect"
-                      className="absolute w-12 h-20 object-cover z-20 cursor-pointer bottom-6 transition-opacity duration-700 ease-out left-48"
-                      style={{ top: '29px', left: '5px' }}
+                      className="absolute  w-16 h-24 object-cover z-20 cursor-pointer bottom-6 transition-opacity duration-700 ease-out "
+                      style={{ top: '54px', right: '80px' }}
                     />
                   </button>
                 </div>
