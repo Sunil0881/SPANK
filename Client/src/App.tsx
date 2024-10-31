@@ -259,13 +259,14 @@ useEffect(() => {
       const rect = imageRef.current.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
+      console.log("coords",x,y);
       setCoordinates({ x, y });
       checkActionArea(x, y);
     }
   };
 
   const checkActionArea = (x: number, y: number) => {
-    const actionAreas = [{ id: "area1", x: 185, y: 271, width: 130, height: 80 }];
+    const actionAreas = [{ id: "area1", x: 153, y: 322, width: 223, height: 105 }];
     actionAreas.forEach(area => {
       if (x >= area.x && x <= area.x + area.width && y >= area.y && y <= area.y + area.height) {
         handleAction(area.id, x, y);
@@ -436,7 +437,7 @@ const shareReferralLink = (shareLink) => {
             ) : (
               <div>
              
-              <button onClick={disconnectWallet}  className="">
+              <button onClick={disconnectWallet}  className=""> 
               <img src={disconnectwlt} alt="playbtn"
                     className="absolute w-12 h-20 object-cover z-36 cursor-pointer  transition-opacity duration-700 ease-out  left-48"
                     style={{  top: '142px', width: '', height: '' }} />
@@ -451,7 +452,7 @@ const shareReferralLink = (shareLink) => {
             loading="lazy"
             alt="Action"
             className="absolute action-image"
-            style={{ left: '235px', top: '260px', width: '90px', height: '90px' }}
+            style={{ left: '235px', top: '300px', width: '140px', height: '140px' }}
           />
         )}
        
@@ -462,11 +463,11 @@ const shareReferralLink = (shareLink) => {
               alt="New Action"
               className={`new-action-image ${showPlusoneImage ? "show" : "hide"}`}
               style={{
-                position: 'absolute', // Ensure the image is positioned absolutely
-                left:"123px", // Use x coordinate from newImagePosition
-                top: "168px", // Use y coordinate from newImagePosition
-                width: '30px', // Set desired width
-                height: '80px', // Set desired height
+                position: 'absolute', 
+                left:"143px", 
+                top: "40px", 
+                width: '30px', 
+                height: '80px', 
               }}
             />
           )}
@@ -476,7 +477,7 @@ const shareReferralLink = (shareLink) => {
             loading="lazy"
             alt="red "
             className="absolute "
-            style={{ left: '235px', top: '260px', width: '90px', height: '90px' }}
+            style={{ left: '235px', top: '300px', width: '140px', height: '140px' }}
           />
         )}
         {showRedhandImage && (
@@ -486,22 +487,22 @@ const shareReferralLink = (shareLink) => {
             loading="lazy"
             alt="Level Up"
             className="absolute w-fit fade-in-levelup level-up-animation slowFadeInOut "
-            style={{ left: '235px', top: '260px', width: '90px', height: '90px' }}
+            style={{ left: '235px', top: '300px', width: '140px', height: '140px' }}
           />
         
         )}
         {!isFirstImage && (
-          <div className="absolute text-black text-3xl z-20 fade-in" style={{ top: "148px", right: "35px" }}>
+          <div className="absolute text-black text-3xl z-20 fade-in" style={{ top: "26px", right: "35px" }}>
             {score}
           </div>
         )}
         {!isFirstImage && (
-          <div className="absolute text-black text-2xl z-20 font-bold fade-in" style={{ top: "160px", left: "60px" }}>
+          <div className="absolute text-black text-2xl z-20 font-bold fade-in" style={{ top: "36px", left: "73px" }}>
             {level}
           </div>
         )}
         {showMessage && (
-          <div className="absolute bottom-52 left-1/2 transform -translate-x-1/2 bg-white text-black p-1 rounded shadow-md z-20">
+          <div className="absolute top-10 left-1/2 transform -translate-x-1/2 bg-white text-black p-1 rounded shadow-md z-20">
             {message}
           </div>
         )}
