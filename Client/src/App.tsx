@@ -389,7 +389,7 @@ const shareReferralLink = (shareLink) => {
               src={loadingImage}
               loading="lazy"
               alt="Loading"
-              style={{ width: "514px", height: "250px" }}
+              style={{ width: "514px", height: "500px" }}
               className="absolute"
             />
                     <div className="loader-container">
