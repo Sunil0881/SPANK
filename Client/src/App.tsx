@@ -468,8 +468,8 @@ const shareReferralLink = (shareLink) => {
                 top: "40px", 
                 width: '30px', 
                 height: '80px', 
-              }}
-            />
+          }}
+          />
           )}
          {showRedImage && (
           <img
@@ -491,16 +491,36 @@ const shareReferralLink = (shareLink) => {
           />
         
         )}
-        {!isFirstImage && (
-          <div className="absolute text-black text-3xl z-20 fade-in" style={{ top: "26px", right: "35px" }}>
-            {score}
-          </div>
-        )}
-        {!isFirstImage && (
-          <div className="absolute text-black text-2xl z-20 font-bold fade-in" style={{ top: "36px", left: "73px" }}>
-            {level}
-          </div>
-        )}
+       {!isFirstImage && (
+        <div 
+          className="absolute text-3xl z-20 fade-in" 
+          style={{ 
+            top: "26px", 
+            right: "35px", 
+            background: "linear-gradient(to bottom, rgba(255, 75, 108, 100), rgba(255, 151, 114, 100))", // Gradient from pink to red
+            WebkitBackgroundClip: "text", // Clip the background to text
+            color: "transparent", // Make the text transparent
+            transition: "color 0.5s ease-in-out", // Optional for smooth color transitions
+          }}>
+          {score}
+        </div>
+      )}
+
+      {!isFirstImage && (
+        <div 
+          className="absolute text-2xl z-20 font-bold fade-in" 
+          style={{ 
+            top: "36px", 
+            left: "73px", 
+            background: "linear-gradient(to bottom,  rgba(255, 75, 108, 100), rgba(255, 151, 114, 10))", // Gradient from pink to red
+            WebkitBackgroundClip: "text", // Clip the background to text
+            color: "transparent", // Make the text transparent
+            transition: "color 0.5s ease-in-out", // Optional for smooth color transitions
+          }}>
+          {level}
+        </div>
+      )}
+
         {showMessage && (
           <div className="absolute top-10 left-1/2 transform -translate-x-1/2 bg-white text-black p-1 rounded shadow-md z-20">
             {message}
