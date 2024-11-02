@@ -172,7 +172,8 @@ useEffect(() => {
 
 useEffect(() => {
   const fetchUserData = async () => {
-    if (isConnected && address && urlparms) { 
+ 
+    if (isConnected && address ) { 
       try {
         console.log("Using referralCode:", urlparms);
         const referralCode = urlparms;
@@ -190,10 +191,11 @@ useEffect(() => {
         }
 
         const data = await response.json();
+        
         setUserData(data);
         setScore(data.score ?? 0); 
         setLevel(data.level ?? 1); 
-        setCode(data.referralCode ?? ''); 
+        setCode(data.referralCode ?? 'varala da'); 
         console.log(data);
       } catch (error) {
         setError(error.message);
@@ -526,7 +528,7 @@ const shareReferralLink = (shareLink) => {
             {message}
           </div>
         )}
-       {isFirstImage && (
+       {isFirstImage && score >= 10 && (
             <button onClick={handleReferClick} className=" absolute  z-30 bottom-2 left-5">
                <img
             src={Refbtn}
