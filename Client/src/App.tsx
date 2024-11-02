@@ -7,7 +7,7 @@ import PlusoneImage from "../src/assets/One.png";
 import RedImage from "../src/assets/Red.png"
 import loadingImage from "../src/assets/splashscreen.png"; 
 import Refbtn from "../src/assets/refbtn.png";
-import RedhandImage from "../src/assets/redhand.png"; // Import the level-up image
+import RedhandImage from "../src/assets/redhand.png"; 
 import walletlogo from "../src/assets/walletbtn.png";
 import disconnectwlt from "../src/assets/disconnectwlt.png";
 import { ConnectButton } from '@rainbow-me/rainbowkit';
@@ -29,7 +29,7 @@ function App() {
   const [showSpankImage, setShowSpankImage] = useState(false);
    const [urlparms, setUrlparms] = useState("");
   const [showPlusoneImage, setShowPlusoneImage] = useState(false);
-  const [showRedhandImage, setShowRedhandImage] = useState(false); // New state for level-up image
+  const [showRedhandImage, setShowRedhandImage] = useState(false); 
   const [showRedImage, setShowRedImage] = useState(false);
   const [lastActionCoordinates, setLastActionCoordinates] = useState<{ x: number; y: number } | null>(null);
   const [newImagePosition, setNewImagePosition] = useState<{ x: number; y: number } | null>(null);
@@ -40,7 +40,7 @@ function App() {
   const [error, setError] = useState(null);
   const [address, setAddress] = useState<`0x${string}` | undefined>(undefined);
   const [shareLink, setShareLink] = useState('');
-  const [loading, setLoading] = useState(true); // Allows undefined or addresses of type 0x${string}
+  const [loading, setLoading] = useState(true); 
   const [progress, setProgress] = useState(0); 
   
   const levelRequirements = [5,10,100,200,300,400,500];
@@ -50,18 +50,18 @@ function App() {
     const fetchedaddress = account.address;
 
   useEffect(() => {
-    const duration = 3000; // Total loading duration in milliseconds
-    const interval = 100;  // Interval in milliseconds for progress update
-    const increment = 100 / (duration / interval); // Progress increment per interval
+    const duration = 3000; 
+    const interval = 100; 
+    const increment = 100 / (duration / interval); 
   
     const loadingTimeout = setInterval(() => {
       setProgress((prev) => (prev + increment >= 100 ? 100 : prev + increment));
     }, interval);
   
-    // Clear timeout after the total duration to stop loading
+    
     const finishLoading = setTimeout(() => {
       setLoading(false);
-      setProgress(100); // Ensure progress is exactly 100% at the end
+      setProgress(100); 
     }, duration);
   
     return () => {
@@ -150,7 +150,7 @@ useEffect(() => {
     
 // }, []);
 
-// First useEffect to set `urlparms` based on the URL
+
 useEffect(() => {
   const currentUrl = window.location.href;
   const equalSignIndex = currentUrl.indexOf('=');
@@ -158,21 +158,21 @@ useEffect(() => {
   if (equalSignIndex !== -1) {
     const valueAfterEqual = currentUrl.substring(equalSignIndex + 1);
     console.log("Value after '=':", valueAfterEqual);
-    setUrlparms(valueAfterEqual); // Set `urlparms` here
+    setUrlparms(valueAfterEqual); 
   } else {
     console.log("No '=' found in the URL.");
   }
-}, []); // This only runs once, on component mount
+}, []); 
 
-// Second useEffect to log updated `urlparms` value
+
 useEffect(() => {
   console.log("Updated urlparms in useEffect:", urlparms);
 }, [urlparms]);
 
-// Third useEffect to fetch user data when wallet is connected and `urlparms` is available
+
 useEffect(() => {
   const fetchUserData = async () => {
-    if (isConnected && address && urlparms) { // Ensure `urlparms` is available
+    if (isConnected && address && urlparms) { 
       try {
         console.log("Using referralCode:", urlparms);
         const referralCode = urlparms;
@@ -182,7 +182,7 @@ useEffect(() => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ address, referralCode }), // Pass referralCode to backend
+          body: JSON.stringify({ address, referralCode }), 
         });
 
         if (!response.ok) {
@@ -191,9 +191,9 @@ useEffect(() => {
 
         const data = await response.json();
         setUserData(data);
-        setScore(data.score ?? 0); // Fallback to 0 if score is missing
-        setLevel(data.level ?? 1); // Fallback to 1 if level is missing
-        setCode(data.referralCode ?? ''); // Fallback to empty string if referralCode is missing
+        setScore(data.score ?? 0); 
+        setLevel(data.level ?? 1); 
+        setCode(data.referralCode ?? ''); 
         console.log(data);
       } catch (error) {
         setError(error.message);
@@ -202,23 +202,23 @@ useEffect(() => {
   };
 
   fetchUserData();
-}, [isConnected, address, urlparms]); // Run this effect when `isConnected`, `address`, or `urlparms` changes
+}, [isConnected, address, urlparms]); 
 
 
-  // Update user data every 5 seconds if connected
+  
   useEffect(() => {
     let intervalId:any;
 
     if (isConnected && address) {
       intervalId = setInterval(() => {
         updateUserData();
-      }, 5000); // Run every 5 seconds
+      }, 5000); 
     }
 
-    return () => clearInterval(intervalId); // Clean up interval on unmount
+    return () => clearInterval(intervalId); 
   }, [isConnected, address, score, level]);
 
-  // Update user data function
+  
   const updateUserData = async () => {
     if (isConnected && address) {
       const data = { address, score, level };
@@ -278,7 +278,7 @@ useEffect(() => {
     if (level - 1 < levelRequirements.length && score >= levelRequirements[level - 1]) {
       setLevel(prevLevel => {
         const nextLevel = prevLevel + 1;
-        displayRedhandImage(); // Show level-up image after leveling up
+        displayRedhandImage(); 
         return nextLevel;
       });
     }
@@ -297,9 +297,9 @@ useEffect(() => {
 
   const displayRedhandImage = () => {
     setTimeout(() => {
-      setShowRedhandImage(true); // Show level-up image after action image
-      setTimeout(() => setShowRedhandImage(false), 1000); // Hide after 1 second
-    }, 600); // Delay to show level-up image after action image
+      setShowRedhandImage(true); 
+      setTimeout(() => setShowRedhandImage(false), 1000); 
+    }, 600); 
   };
 
   const handleAction = (areaId: string, x: number, y: number) => {
@@ -322,9 +322,9 @@ useEffect(() => {
 let width = 0;
 
 function animateProgress() {
-  if (progressElement) { // Check if progressElement is not null
+  if (progressElement) { 
     if (width < 100) {
-      width += 25; // Adjust speed if needed
+      width += 25;
       progressElement.style.width = width + '%';
       requestAnimationFrame(animateProgress);
     }
@@ -335,11 +335,11 @@ animateProgress();
 
 const handleReferClick = async () => {
   try {
-    // Generate the shareable link with referral code
+    
     const referralUrl = `https://x.com/Sunil_0881/status/1850935854539383234?referral=${code}`;
                        
     
-    // Call the share function directly with the referralUrl
+    
     shareReferralLink(referralUrl);
     
   } catch (error) {
@@ -348,14 +348,14 @@ const handleReferClick = async () => {
 };
 
 const shareReferralLink = (shareLink) => {
-  // Create a WhatsApp share URL
+  
   const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareLink)}`;
 
-  // You can create similar URLs for other platforms if needed
+  
   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareLink)}`;
   const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareLink)}`;
 
-  // Use the Web Share API if supported
+
   if (navigator.share) {
     navigator.share({
       title: 'Check out this referral link!',
@@ -364,16 +364,16 @@ const shareReferralLink = (shareLink) => {
       console.log('Referral link shared successfully');
     }).catch((error) => {
       console.error('Error sharing:', error);
-      // Fallback to WhatsApp sharing if Web Share API fails
+      
       window.open(whatsappUrl, '_blank');
     });
   } else {
-    // If Web Share API is not supported, provide WhatsApp link
+    
     const userChoice = window.confirm('Share on WhatsApp? Click OK to share on WhatsApp, Cancel to open in a new tab.');
     if (userChoice) {
       window.open(whatsappUrl, '_blank');
     } else {
-      window.open(facebookUrl, '_blank'); // or any other platform
+      window.open(facebookUrl, '_blank'); 
     }
   }
 };
@@ -497,10 +497,10 @@ const shareReferralLink = (shareLink) => {
           style={{ 
             top: "26px", 
             right: "35px", 
-            background: "linear-gradient(to bottom, rgba(255, 75, 108, 100), rgba(255, 151, 114, 100))", // Gradient from pink to red
-            WebkitBackgroundClip: "text", // Clip the background to text
-            color: "transparent", // Make the text transparent
-            transition: "color 0.5s ease-in-out", // Optional for smooth color transitions
+            background: "linear-gradient(to bottom, rgba(255, 75, 108, 100), rgba(255, 151, 114, 100))", 
+            WebkitBackgroundClip: "text", 
+            color: "transparent", 
+            transition: "color 0.5s ease-in-out", 
           }}>
           {score}
         </div>
@@ -512,10 +512,10 @@ const shareReferralLink = (shareLink) => {
           style={{ 
             top: "36px", 
             left: "73px", 
-            background: "linear-gradient(to bottom,  rgba(255, 75, 108, 100), rgba(255, 151, 114, 10))", // Gradient from pink to red
-            WebkitBackgroundClip: "text", // Clip the background to text
-            color: "transparent", // Make the text transparent
-            transition: "color 0.5s ease-in-out", // Optional for smooth color transitions
+            background: "linear-gradient(to bottom,  rgba(255, 75, 108, 100), rgba(255, 151, 114, 10))", 
+            WebkitBackgroundClip: "text", 
+            color: "transparent", 
+            transition: "color 0.5s ease-in-out", 
           }}>
           {level}
         </div>
