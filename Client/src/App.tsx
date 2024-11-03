@@ -26,6 +26,7 @@ function App() {
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [message, setMessage] = useState("");
   const [showMessage, setShowMessage] = useState(false);
+  const [showRef, setShowRef] = useState(false);
   const [showSpankImage, setShowSpankImage] = useState(false);
    const [urlparms, setUrlparms] = useState("");
   const [showPlusoneImage, setShowPlusoneImage] = useState(false);
@@ -43,7 +44,7 @@ function App() {
   const [loading, setLoading] = useState(true); 
   const [progress, setProgress] = useState(0); 
   
-  const levelRequirements = [5,10,100,200,300,400,500];
+  const levelRequirements = [100,200,300,400,500,600,700,800,900,1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000];
 
     const { isConnected } = useAccount();  
     const account = useAccount();
@@ -142,7 +143,9 @@ useEffect(() => {
   } else {
     setIsWalletConnected(false);
     setAddress(undefined);
+    setShowRef(false);
   }
+
 }, [isConnected]);
 
 //   useEffect(() => {
@@ -214,13 +217,22 @@ useEffect(() => {
     if (isConnected && address) {
       intervalId = setInterval(() => {
         updateUserData();
-      }, 5000); 
+      }, 3000); 
     }
 
+  
     return () => clearInterval(intervalId); 
+
   }, [isConnected, address, score, level]);
 
-  
+  useEffect(() => {
+    if (score >= 15) {
+        setShowRef(true);
+        console.log("showRef=", true); // Logging after setting showRef
+    }
+}, [score]);
+
+
   const updateUserData = async () => {
     if (isConnected && address) {
       const data = { address, score, level };
@@ -310,6 +322,10 @@ useEffect(() => {
       displayActionImage();
       setNewImagePosition({ x: 250, y: 300 });
       setScore(prevScore => prevScore + 1);
+      if (score >= 15) {
+        setShowRef(true);
+        console.log("showref=",showRef);
+    }
     }
   };
 
@@ -528,7 +544,7 @@ const shareReferralLink = (shareLink) => {
             {message}
           </div>
         )}
-       {isFirstImage && score >= 10 && (
+       {isFirstImage && showRef && (
             <button onClick={handleReferClick} className=" absolute  z-30 bottom-2 left-5">
                <img
             src={Refbtn}

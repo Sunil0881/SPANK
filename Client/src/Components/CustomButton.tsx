@@ -19,6 +19,8 @@ const CustomButton = () => {
     setConnected(isConnected);
   }, [isConnected]);
 
+  
+
   return (
     <ConnectButton.Custom>
       {({
