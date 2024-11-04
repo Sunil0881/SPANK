@@ -8,13 +8,9 @@ import RedImage from "../src/assets/Red.png"
 import loadingImage from "../src/assets/splashscreen.png"; 
 import Refbtn from "../src/assets/refbtn.png";
 import RedhandImage from "../src/assets/redhand.png"; 
-import walletlogo from "../src/assets/walletbtn.png";
-import disconnectwlt from "../src/assets/disconnectwlt.png";
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 import CustomButton from "./Components/CustomButton";
 import { useAccount } from 'wagmi';
-import {dev, local} from "./Constant";
-import { ethers } from "ethers";
+import {dev} from "./Constant";
 import "./App.css";
 
 
@@ -39,9 +35,7 @@ function App() {
   const [code, setCode] = useState(null);
   const [level, setLevel] = useState(1);
   const [userData, setUserData] = useState(null);
-  const [error, setError] = useState(null);
   const [address, setAddress] = useState<`0x${string}` | undefined>(undefined);
-  const [shareLink, setShareLink] = useState('');
   const [loading, setLoading] = useState(true); 
   const [progress, setProgress] = useState(0); 
   
@@ -58,6 +52,7 @@ function App() {
   
     const loadingTimeout = setInterval(() => {
       setProgress((prev) => (prev + increment >= 100 ? 100 : prev + increment));
+      console.log(progress);
     }, interval);
   
     
@@ -201,8 +196,11 @@ useEffect(() => {
         setLevel(data.level ?? 1); 
         setCode(data.referralCode ?? 'varala da'); 
         console.log(data);
+        console.log(userData);
+        
       } catch (error) {
-        setError(error.message);
+        console.log("error");
+        
       }
     }
   };
@@ -275,6 +273,7 @@ useEffect(() => {
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       console.log("coords",x,y);
+      console.log("coords",coordinates);
       setCoordinates({ x, y });
       checkActionArea(x, y);
     }
@@ -366,13 +365,13 @@ const handleReferClick = async () => {
   }
 };
 
-const shareReferralLink = (shareLink) => {
+const shareReferralLink = (shareLink:any) => {
   
   const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareLink)}`;
 
   
   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareLink)}`;
-  const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareLink)}`;
+  
 
 
   if (navigator.share) {
