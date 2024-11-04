@@ -18,6 +18,7 @@ import { ethers } from "ethers";
 import "./App.css";
 
 
+
 function App() {
   const imageRef = useRef<HTMLImageElement | null>(null);
   const [coordinates, setCoordinates] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
@@ -319,6 +320,8 @@ useEffect(() => {
   const handleAction = (areaId: string, x: number, y: number) => {
     if (areaId === "area1") {
       setLastActionCoordinates({ x, y });
+      const audio = new Audio("../public/Yes_audio.mp3");
+      audio.play();
       displayActionImage();
       setNewImagePosition({ x: 250, y: 300 });
       setScore(prevScore => prevScore + 1);
