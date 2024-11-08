@@ -12,6 +12,7 @@ import CustomButton from "./Components/CustomButton";
 import { useAccount } from 'wagmi';
 import {dev} from "./Constant";
 import "./App.css";
+import animationimgbutt from "../src/assets/animatedimg.png";
 
 
 
@@ -34,6 +35,7 @@ function App() {
   const [newImagePosition, setNewImagePosition] = useState<{ x: number; y: number } | null>(null);
   const [score, setScore] = useState(0);
   const [code, setCode] = useState(null);
+  const [Showanimationbutt, setShowanimationbutt] = useState(false);
   const [level, setLevel] = useState(1);
   const [userData, setUserData] = useState(null);
   const [address, setAddress] = useState<`0x${string}` | undefined>(undefined);
@@ -47,8 +49,8 @@ function App() {
     const fetchedaddress = account.address;
 
   useEffect(() => {
-    const duration = 3000; 
-    const interval = 100; 
+    const duration = 2000; 
+    const interval = 400; 
     const increment = 100 / (duration / interval); 
   
     const loadingTimeout = setInterval(() => {
@@ -66,6 +68,28 @@ function App() {
       clearTimeout(finishLoading);
       clearInterval(loadingTimeout);
     };
+  }, []);
+
+
+  useEffect(() => {
+    const duration = 2000; // Total duration of progress animation in ms
+    const startTime = performance.now(); // Starting time
+    
+    function animateProgress(currentTime) {
+      const elapsedTime = currentTime - startTime;
+      const progressPercentage = Math.min((elapsedTime / duration) * 100, 100); // Cap at 100%
+      setProgress(progressPercentage);
+
+      if (elapsedTime < duration) {
+        requestAnimationFrame(animateProgress); // Keep animating until duration is reached
+      } else {
+        setLoading(false); // Finish loading when the duration is over
+      }
+    }
+
+    const animationFrame = requestAnimationFrame(animateProgress);
+
+    return () => cancelAnimationFrame(animationFrame); // Clean up on unmount
   }, []);
   
 //   const checkIfWalletIsConnected = async () => {
@@ -300,10 +324,12 @@ useEffect(() => {
   }, [score]);
 
   const displayActionImage = () => {
+    setShowanimationbutt(true);
     setShowSpankImage(true);
     setShowPlusoneImage(true);
     setShowRedImage(true);
     setTimeout(() => {
+      setShowanimationbutt(false);
       setShowSpankImage(false);
       setShowPlusoneImage(false);
       setShowRedImage(false);
@@ -321,7 +347,7 @@ useEffect(() => {
     if (areaId === "area1") {
       setLastActionCoordinates({ x, y });
       const audio = new Audio("../src/assets/Yes_audio.mp3");
-      audio.play();
+      //audio.play();
       displayActionImage();
       setNewImagePosition({ x: 250, y: 300 });
       setScore(prevScore => prevScore + 1);
@@ -472,7 +498,7 @@ const shareReferralLink = (shareLink:any) => {
             src={ActionImage}
             loading="lazy"
             alt="Action"
-            className="absolute action-image"
+            className="absolute action-image z-30"
             style={{ left: '235px', top: '300px', width: '140px', height: '140px' }}
           />
         )}
@@ -482,7 +508,7 @@ const shareReferralLink = (shareLink:any) => {
               src={PlusoneImage}
               loading="lazy"
               alt="New Action"
-              className={`new-action-image ${showPlusoneImage ? "show" : "hide"}`}
+              className={`new-action-image z-30 ${showPlusoneImage ? "show" : "hide"}`}
               style={{
                 position: 'absolute', 
                 left:"143px", 
@@ -492,6 +518,19 @@ const shareReferralLink = (shareLink:any) => {
           }}
           />
           )}
+
+          {Showanimationbutt && (
+         
+         <img
+           src={animationimgbutt}
+           loading="lazy"
+           alt="Level Up"
+           className="absolute w-fit  "
+           style={{ left: '123px', width: '290px', height: '490px',bottom:'24px' }}
+         />
+       
+         )}
+
          {showRedImage && (
           <img
             src={RedImage}
