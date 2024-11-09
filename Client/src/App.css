@@ -138,7 +138,7 @@
 
 .progress {
   height: 100%;
-  background: linear-gradient(90deg, #ff6a00, #ff00ff); /* Gradient colors */
+  background: linear-gradient(90deg, #e8ce50, #ee0c57); /* Gradient colors */
   border-radius: 10px;
   transition: width 0.4s ease;
 }

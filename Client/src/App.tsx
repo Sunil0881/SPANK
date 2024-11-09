@@ -50,21 +50,22 @@ function App() {
     const fetchedaddress = account.address;
 
     useEffect(() => {
-      const duration = 3000; // Total duration in milliseconds
-      const interval = 100; // Update interval in milliseconds
+      const duration = 4000; // Total duration in milliseconds (4 seconds)
+      const interval = 100; // Smaller interval for smoother progress
       const steps = duration / interval; // Total number of increments
-      const increment = 270 / steps; // Progress increment per interval
-  
+      const increment = 200 / steps; // Progress increment per interval (ensures it reaches 100%)
+      
+      
       const loadingInterval = setInterval(() => {
         setProgress((prev) => {
           const newProgress = prev + increment;
           
           // Display messages at specific progress points
-          if (newProgress >= 0 && newProgress < 60) {
+          if (newProgress >= 0 && newProgress < 35) {
             setLoadingmessage("Tap that booty and collect SPANKS points");
-          } else if (newProgress >= 60 && newProgress < 90) {
-            setLoadingmessage("Refer friends to earn more SPANKS points ");
-          } else if (newProgress >= 90) {
+          } else if (newProgress >= 35 && newProgress < 70) {
+            setLoadingmessage("Refer friends to earn more points ");
+          } else if (newProgress >= 70) {
             setLoadingmessage(" Connect your crypto wallet for rewards");
           }
   
