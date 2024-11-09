@@ -238,6 +238,7 @@ useEffect(() => {
         const data = await response.json();
         
         setUserData(data);
+        console.log(userData);
         setScore(data.score ?? 0); 
         setLevel(data.level ?? 1); 
         setClickProgress(data.levelbar ?? 0);
