@@ -81,23 +81,21 @@ mongoose
 });
 
 
-
 app.put('/api/user/update', async (req, res) => {
+  console.log('Received body:', req.body); // Log the body content
+  
   const { address, score, level, levelbar } = req.body;
-
+  
   try {
-      
       let user = await User.findOne({ address });
 
       if (!user) {
-          
           return res.status(404).json({ message: "User not found." });
       }
 
-      
       user.score = score || user.score; 
       user.level = level || user.level; // Update level if provided, otherwise keep the existing value
-      user.levelbar = level || user.levelbar;
+      user.levelbar = levelbar || user.levelbar;
       await user.save();
 
       // Return the updated user details
@@ -112,6 +110,7 @@ app.put('/api/user/update', async (req, res) => {
       return res.status(500).json({ message: "Server error.", error: error.message });
   }
 });
+
 
 
 
