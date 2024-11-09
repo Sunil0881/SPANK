@@ -5,7 +5,7 @@ import playbtn from "../src/assets/playbtn.png";
 import ActionImage from "../src/assets/Spank.png";
 import PlusoneImage from "../src/assets/One.png";
 import RedImage from "../src/assets/Red.png"
-import loadingImage from "../src/assets/splashscreen.png"; 
+import loadingImage from "../src/assets/splashscreen.webp"; 
 import Refbtn from "../src/assets/refbtn.png";
 import RedhandImage from "../src/assets/redhand.png"; 
 import CustomButton from "./Components/CustomButton";
