@@ -25,6 +25,7 @@ function App() {
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [message, setMessage] = useState("");
   const [showMessage, setShowMessage] = useState(false);
+  const [loadingmessage, setLoadingmessage] = useState("");
   const [showRef, setShowRef] = useState(false);
   const [showSpankImage, setShowSpankImage] = useState(false);
    const [urlparms, setUrlparms] = useState("");
@@ -48,49 +49,62 @@ function App() {
     const account = useAccount();
     const fetchedaddress = account.address;
 
-  useEffect(() => {
-    const duration = 2000; 
-    const interval = 400; 
-    const increment = 100 / (duration / interval); 
+    useEffect(() => {
+      const duration = 3000; // Total duration in milliseconds
+      const interval = 100; // Update interval in milliseconds
+      const steps = duration / interval; // Total number of increments
+      const increment = 270 / steps; // Progress increment per interval
   
-    const loadingTimeout = setInterval(() => {
-      setProgress((prev) => (prev + increment >= 100 ? 100 : prev + increment));
-      console.log(progress);
-    }, interval);
+      const loadingInterval = setInterval(() => {
+        setProgress((prev) => {
+          const newProgress = prev + increment;
+          
+          // Display messages at specific progress points
+          if (newProgress >= 0 && newProgress < 60) {
+            setLoadingmessage("Tap that booty and collect SPANKS points");
+          } else if (newProgress >= 60 && newProgress < 90) {
+            setLoadingmessage("Refer friends to earn more SPANKS points ");
+          } else if (newProgress >= 90) {
+            setLoadingmessage(" Connect your crypto wallet for rewards");
+          }
   
+          return newProgress >= 100 ? 100 : newProgress;
+        });
+      }, interval);
+  
+      const finishLoading = setTimeout(() => {
+        setLoading(false);
+        setProgress(100); // Ensure progress is exactly 100 at the end
+        setMessage("Complete!"); // Final message
+      }, duration);
+      return () => {
+        clearTimeout(finishLoading);
+        clearInterval(loadingInterval);
+      };
+    }, []);
+  
+
+
+  // useEffect(() => {
+  //   const duration = 2000; // Total duration of progress animation in ms
+  //   const startTime = performance.now(); // Starting time
     
-    const finishLoading = setTimeout(() => {
-      setLoading(false);
-      setProgress(100); 
-    }, duration);
-  
-    return () => {
-      clearTimeout(finishLoading);
-      clearInterval(loadingTimeout);
-    };
-  }, []);
+  //   function animateProgress(currentTime) {
+  //     const elapsedTime = currentTime - startTime;
+  //     const progressPercentage = Math.min((elapsedTime / duration) * 100, 100); // Cap at 100%
+  //     setProgress(progressPercentage);
 
+  //     if (elapsedTime < duration) {
+  //       requestAnimationFrame(animateProgress); // Keep animating until duration is reached
+  //     } else {
+  //       setLoading(false); // Finish loading when the duration is over
+  //     }
+  //   }
 
-  useEffect(() => {
-    const duration = 2000; // Total duration of progress animation in ms
-    const startTime = performance.now(); // Starting time
-    
-    function animateProgress(currentTime) {
-      const elapsedTime = currentTime - startTime;
-      const progressPercentage = Math.min((elapsedTime / duration) * 100, 100); // Cap at 100%
-      setProgress(progressPercentage);
+  //   const animationFrame = requestAnimationFrame(animateProgress);
 
-      if (elapsedTime < duration) {
-        requestAnimationFrame(animateProgress); // Keep animating until duration is reached
-      } else {
-        setLoading(false); // Finish loading when the duration is over
-      }
-    }
-
-    const animationFrame = requestAnimationFrame(animateProgress);
-
-    return () => cancelAnimationFrame(animationFrame); // Clean up on unmount
-  }, []);
+  //   return () => cancelAnimationFrame(animationFrame); // Clean up on unmount
+  // }, []);
   
 //   const checkIfWalletIsConnected = async () => {
 //     if (window.ethereum) {
@@ -347,7 +361,7 @@ useEffect(() => {
     if (areaId === "area1") {
       setLastActionCoordinates({ x, y });
       const audio = new Audio("../src/assets/Yes_audio.mp3");
-      //audio.play();
+      audio.play();
       displayActionImage();
       setNewImagePosition({ x: 250, y: 300 });
       setScore(prevScore => prevScore + 1);
@@ -440,14 +454,21 @@ const shareReferralLink = (shareLink:any) => {
               alt="Loading"
               style={{ width: "514px", height: "515px" }}
               className="absolute"
-            />
-                    <div className="loader-container">
-          <div className="loading-bar absolute mt-60">
-            <div className="progress"></div>
-          </div>
-          <div className="loading-text ">LOADING...</div>
-        </div>
-
+            />    
+         
+             <div className=" text-md font-bold text-red-400 z-30 mt-44 w-60 text-center" style={{ textShadow: "1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff" }}>
+                      {loadingmessage}
+             </div>
+             <div className="loader-container">
+                      
+                  <div className="loading-bar absolute mt-4">
+                      <div className="progress" style={{ width: `${progress}%` }}></div>
+                        
+                     </div>
+                         
+                          <div className="loading-text text-red-400 text-md font-semibold" style={{ textShadow: "1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff" }}>LOADING...</div>
+              </div>
+                   
           </div>
         )}
 
