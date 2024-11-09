@@ -34,6 +34,10 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 1, // Default level
   },
+  levelbar: {
+    type: Number,
+    default: 0, // Default level
+  },
   createdAt: {
     type: Date,
     default: Date.now, // Track when the user was added to the system

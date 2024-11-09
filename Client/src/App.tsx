@@ -35,6 +35,7 @@ function App() {
   const [lastActionCoordinates, setLastActionCoordinates] = useState<{ x: number; y: number } | null>(null);
   const [newImagePosition, setNewImagePosition] = useState<{ x: number; y: number } | null>(null);
   const [score, setScore] = useState(0);
+  const [clickProgress, setClickProgress] = useState(0);
   const [code, setCode] = useState(null);
   const [Showanimationbutt, setShowanimationbutt] = useState(false);
   const [level, setLevel] = useState(1);
@@ -84,7 +85,12 @@ function App() {
       };
     }, []);
   
-
+    const handlemeterClick = () => {
+      setClickProgress((prev) => {
+        const newProgress = prev + 1;
+        return newProgress >= 100 ? 0 : newProgress; // Reset to 0 if it reaches 100
+      });
+    };
 
   // useEffect(() => {
   //   const duration = 2000; // Total duration of progress animation in ms
@@ -234,9 +240,9 @@ useEffect(() => {
         setUserData(data);
         setScore(data.score ?? 0); 
         setLevel(data.level ?? 1); 
+        setClickProgress(data.levelbar ?? 0);
         setCode(data.referralCode ?? 'varala da'); 
-        console.log(data);
-        console.log(userData);
+      
         
       } catch (error) {
         console.log("error");
@@ -262,7 +268,7 @@ useEffect(() => {
   
     return () => clearInterval(intervalId); 
 
-  }, [isConnected, address, score, level]);
+  }, [isConnected, address, score, level, clickProgress]);
 
   useEffect(() => {
     if (score >= 15) {
@@ -274,7 +280,7 @@ useEffect(() => {
 
   const updateUserData = async () => {
     if (isConnected && address) {
-      const data = { address, score, level };
+      const data = { address, score, level, levelbar:clickProgress };
       console.log('Updating Data to DB');
       try {
         const response = await fetch(`${dev}/api/user/update`, {
@@ -364,6 +370,7 @@ useEffect(() => {
       const audio = new Audio("../src/assets/Yes_audio.mp3");
       audio.play();
       displayActionImage();
+      handlemeterClick();
       setNewImagePosition({ x: 250, y: 300 });
       setScore(prevScore => prevScore + 1);
       if (score >= 15) {
@@ -602,6 +609,14 @@ const shareReferralLink = (shareLink:any) => {
           {level}
         </div>
       )}
+{!isFirstImage && (
+  <div className="z-20 absolute top-4 left-6">
+    <div className="progress-meter-container ">
+      <div className="progress-bar" style={{ width: `${clickProgress}%` }}></div>
+      <p className="invisible-dots">...................................</p> {/* Invisible dots */}
+    </div>
+  </div>
+)}
 
         {showMessage && (
           <div className="absolute top-10 left-1/2 transform -translate-x-1/2 bg-white text-black p-1 rounded shadow-md z-20">
