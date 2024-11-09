@@ -88,94 +88,13 @@ function App() {
     const handlemeterClick = () => {
       setClickProgress((prev) => {
         const newProgress = prev + 1;
+        console.log(newProgress);
+
         return newProgress >= 100 ? 0 : newProgress; // Reset to 0 if it reaches 100
       });
     };
 
-  // useEffect(() => {
-  //   const duration = 2000; // Total duration of progress animation in ms
-  //   const startTime = performance.now(); // Starting time
-    
-  //   function animateProgress(currentTime) {
-  //     const elapsedTime = currentTime - startTime;
-  //     const progressPercentage = Math.min((elapsedTime / duration) * 100, 100); // Cap at 100%
-  //     setProgress(progressPercentage);
-
-  //     if (elapsedTime < duration) {
-  //       requestAnimationFrame(animateProgress); // Keep animating until duration is reached
-  //     } else {
-  //       setLoading(false); // Finish loading when the duration is over
-  //     }
-  //   }
-
-  //   const animationFrame = requestAnimationFrame(animateProgress);
-
-  //   return () => cancelAnimationFrame(animationFrame); // Clean up on unmount
-  // }, []);
-  
-//   const checkIfWalletIsConnected = async () => {
-//     if (window.ethereum) {
-//         try {
-//             const provider = new ethers.providers.Web3Provider(window.ethereum);
-//             const accounts = await provider.listAccounts();
-//             const signer = provider.getSigner();
-
-//             console.log("Signer:", signer);
-
-//             // If there are any accounts, set the wallet as connected
-//             if (accounts.length > 0) {
-//                 const connectedAccount = accounts[0];
-//                 setAddress(connectedAccount);
-               
-//                 setIsWalletConnected(true);
-
-//                 console.log("Connected Account:", connectedAccount);
-//                 console.log("Wallet is connected:", true);
-//             } else {
-              
-//                 setIsWalletConnected(false);
-
-//                 console.log("No account connected.");
-//                 console.log("Wallet is connected:", false);
-//             }
-//         } catch (error) {
-//             console.error("Error checking wallet connection:", error);
-//         }
-//     } else {
-//         console.log("MetaMask is not installed");
-//     }
-// };
-
-
-// const connectWallet = async () => {
-//   if (window.ethereum) {
-//       try {
-//           const provider = new ethers.providers.Web3Provider(window.ethereum);
-//           const accounts = await provider.send("eth_requestAccounts", []);
-//           const signer = provider.getSigner();
-//           console.log("signer",signer);
-//           if (accounts.length > 0) {
-//             setAddress(accounts[0]);
-//             console.log(accounts[0]);
-             
-//               setIsWalletConnected(true);
-//           }
-//       } catch (error) {
-//           console.error('Error connecting to wallet:', error);
-//       }
-//   } else {
-//       alert('Please install MetaMask to use this feature.');
-//   }
-// };
  
-
-// const disconnectWallet = () => {
-//   setAddress(null); // Clear the address state
-//   setIsConnected(false); // Update connection state
-//   setIsWalletConnected(false); // Update wallet connection state
-//   console.log("Wallet disconnected");
-// };
-
 
 useEffect(() => {
    
@@ -213,6 +132,10 @@ useEffect(() => {
 useEffect(() => {
   console.log("Updated urlparms in useEffect:", urlparms);
 }, [urlparms]);
+
+useEffect(() => {
+  console.log("Updated clickProgress in useEffect:", clickProgress);
+}, [clickProgress]);
 
 
 useEffect(() => {
@@ -282,6 +205,7 @@ useEffect(() => {
   const updateUserData = async () => {
     if (isConnected && address) {
       const data = { address, score, level, levelbar:clickProgress };
+      console.log(data);
       console.log('Updating Data to DB');
       try {
         const response = await fetch(`${dev}/api/user/update`, {
