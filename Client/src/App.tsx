@@ -13,6 +13,7 @@ import { useAccount } from 'wagmi';
 import {dev} from "./Constant";
 import "./App.css";
 import animationimgbutt from "../src/assets/animatedimg.png";
+import audio from "../src/assets/Yes_audio.mp3";
 
 
 
@@ -292,8 +293,8 @@ useEffect(() => {
   const handleAction = (areaId: string, x: number, y: number) => {
     if (areaId === "area1") {
       setLastActionCoordinates({ x, y });
-      const audio = new Audio("../src/assets/Yes_audio.mp3");
-      audio.play();
+      const audios = new Audio(audio);
+      audios.play();
       displayActionImage();
       handlemeterClick();
       setNewImagePosition({ x: 250, y: 300 });
