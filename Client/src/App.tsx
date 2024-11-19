@@ -14,6 +14,7 @@ import {dev} from "./Constant";
 import "./App.css";
 import animationimgbutt from "../src/assets/animatedimg.png";
 import audio from "../src/assets/Yes_audio.mp3";
+import setting from "../src/assets/settings2.png";
 
 
 
@@ -560,6 +561,19 @@ const shareReferralLink = (shareLink:any) => {
           />
             </button> 
         )}
+
+          {/* {  showRef && ( */}
+            <button  className=" absolute  z-30 bottom-7 right-6">
+               <img
+            src={setting}
+            loading="lazy"
+            alt="Ref btn"
+             
+             style={{  width: '40px', height: '40px' }}
+          />
+            </button> 
+        {/* )} */}
+
       </div>
     </div>
   );
