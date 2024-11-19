@@ -549,8 +549,8 @@ const shareReferralLink = (shareLink:any) => {
             {message}
           </div>
         )}
-       {isFirstImage && showRef && (
-            <button onClick={handleReferClick} className=" absolute  z-30 bottom-2 left-5">
+       {  showRef && (
+            <button onClick={handleReferClick} className=" absolute  z-30 bottom-4 left-5">
                <img
             src={Refbtn}
             loading="lazy"
