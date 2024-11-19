@@ -27,7 +27,6 @@ const CustomButton = () => {
         account,
         chain,
         openAccountModal,
-        openChainModal,
         openConnectModal,
         authenticationStatus,
         mounted,
