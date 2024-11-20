@@ -394,15 +394,28 @@ const shareReferralLink = (shareLink:any) => {
              <div className=" text-md font-bold text-red-400 z-30 mt-44 w-60 text-center" style={{ textShadow: "1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff" }}>
                       {loadingmessage}
              </div>
-             <div className="loader-container">
-                      
-                  <div className="loading-bar absolute mt-4">
-                      <div className="progress" style={{ width: `${progress}%` }}></div>
-                        
-                     </div>
-                         
-                          <div className="loading-text text-red-400 text-md font-semibold" style={{ textShadow: "1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff" }}>LOADING...</div>
-              </div>
+             <div className="relative w-4/5  mt-6 ">
+  {/* Loading Bar */}
+  <div className="flex justify-center">
+  <div className="h-4 w-4/5  bg-white rounded-md ring-2 ring-white overflow-hidden">
+    <div
+      className="h-full bg-gradient-to-r from-yellow-400 to-red-500 transition-all duration-300 ease-in-out"
+      style={{ width: `${progress}%` }}
+    ></div>
+  </div>
+  </div>
+
+  {/* Loading Text */}
+  <div
+    className="mt-3 text-red-400 text-lg font-semibold text-center"
+    style={{
+      textShadow: "1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff"
+    }}
+  >
+    LOADING...
+  </div>
+</div>
+
                    
           </div>
         )}
