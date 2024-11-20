@@ -365,50 +365,57 @@ function animateProgress() {
 
 animateProgress();
 
-const handleReferClick = async () => {
-  try {
+const handleShare = () => {
+  const referralUrl = `https://x.com/Sunil_0881/status/1855179504919945397`;
+  const tweetText = `Join the fun in this exciting card game! Use my referral ID: ${code} to get rewards 🎮✨. Play here: ${referralUrl}`;
+  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+  window.open(twitterUrl, "_blank"); // Open in a new tab
+};
+
+// const handleReferClick = async () => {
+//   try {
     
-    const referralUrl = `https://x.com/Sunil_0881/status/1850935854539383234?referral=${code}`;
+//     const referralUrl = `https://x.com/Sunil_0881/status/1855179504919945397`;
                        
     
     
-    shareReferralLink(referralUrl);
+//     shareReferralLink(referralUrl);
     
-  } catch (error) {
-    console.error('Error fetching referral code:', error);
-  }
-};
+//   } catch (error) {
+//     console.error('Error fetching referral code:', error);
+//   }
+// };
 
-const shareReferralLink = (shareLink:any) => {
+// const shareReferralLink = (shareLink:any) => {
   
-  const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareLink)}`;
+//   const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareLink)}`;
 
   
-  const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareLink)}`;
+//   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareLink)}`;
   
 
 
-  if (navigator.share) {
-    navigator.share({
-      title: 'Check out this referral link!',
-      url: shareLink,
-    }).then(() => {
-      console.log('Referral link shared successfully');
-    }).catch((error) => {
-      console.error('Error sharing:', error);
+//   if (navigator.share) {
+//     navigator.share({
+//       title: 'Check out this referral link!',
+//       url: shareLink,
+//     }).then(() => {
+//       console.log('Referral link shared successfully');
+//     }).catch((error) => {
+//       console.error('Error sharing:', error);
       
-      window.open(whatsappUrl, '_blank');
-    });
-  } else {
+//       window.open(whatsappUrl, '_blank');
+//     });
+//   } else {
     
-    const userChoice = window.confirm('Share on WhatsApp? Click OK to share on WhatsApp, Cancel to open in a new tab.');
-    if (userChoice) {
-      window.open(whatsappUrl, '_blank');
-    } else {
-      window.open(facebookUrl, '_blank'); 
-    }
-  }
-};
+//     const userChoice = window.confirm('Share on WhatsApp? Click OK to share on WhatsApp, Cancel to open in a new tab.');
+//     if (userChoice) {
+//       window.open(whatsappUrl, '_blank');
+//     } else {
+//       window.open(facebookUrl, '_blank'); 
+//     }
+//   }
+// };
 
   
  
@@ -600,7 +607,10 @@ const shareReferralLink = (shareLink:any) => {
           </div>
         )}
        {  showRef && (
-            <button onClick={handleReferClick} className=" absolute  z-30 bottom-4 left-5">
+            <button 
+            //onClick={handleReferClick} 
+            onClick={handleShare}
+            className=" absolute  z-30 bottom-4 left-5">
                <img
             src={Refbtn}
             loading="lazy"
