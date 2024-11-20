@@ -10,7 +10,7 @@ import Refbtn from "../src/assets/refbtn.png";
 import RedhandImage from "../src/assets/redhand.png"; 
 import CustomButton from "./Components/CustomButton";
 import { useAccount } from 'wagmi';
-import {dev} from "./Constant";
+import {dev, local} from "./Constant";
 import "./App.css";
 import animationimgbutt from "../src/assets/animatedimg.png";
 import audio from "../src/assets/Yes_audio.mp3";
@@ -150,7 +150,7 @@ useEffect(() => {
         console.log("Using referralCode:", urlparms);
         const referralCode = urlparms;
 
-        const response = await fetch(`${dev}/api/user`, {
+        const response = await fetch(`${local}/api/user`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -187,14 +187,35 @@ useEffect(() => {
 const handleOpenPopup = () => setShowPopup(true); // Open popup
 const handleClosePopup = () => setShowPopup(false); // Close popup
 
-const handleRefSubmit = () => {
+const handleRefSubmit = async () => {
   if (referralId.trim() === "") {
     alert("Please enter a referral ID.");
     return;
   }
-  alert(`Referral ID submitted: ${referralId}`);
-  handleClosePopup(); // Close popup after submission
+
+  try {
+    const response = await fetch(`${local}/api/user/update-referred-by`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ referralId, address: address }), // Send referralId and user's address
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log("Referral ID submitted successfully:", data.message);
+    } else {
+      console.error("Error submitting referral ID:", data.error);
+    }
+  } catch (error) {
+    console.error("Network error while submitting referral ID:", error);
+  } finally {
+    handleClosePopup(); // Close popup after submission
+  }
 };
+
 
 
   useEffect(() => {
@@ -225,7 +246,7 @@ const handleRefSubmit = () => {
       console.log(data);
       console.log('Updating Data to DB');
       try {
-        const response = await fetch(`${dev}/api/user/update`, {
+        const response = await fetch(`${local}/api/user/update`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

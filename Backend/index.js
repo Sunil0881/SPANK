@@ -112,6 +112,48 @@ app.put('/api/user/update', async (req, res) => {
 });
 
 
+app.post("/api/user/update-referred-by", async (req, res) => {
+  const { referralId, address } = req.body;
+
+  if (!referralId || !address) {
+    return res.status(400).json({ error: "Referral ID and address are required." });
+  }
+
+  try {
+    // Find the user by their address
+    const user = await User.findOne({ address });
+    if (!user) {
+      return res.status(404).json({ error: "User not found." });
+    }
+
+    // Find the referrer by their referralCode
+    const referrer = await User.findOne({ referralCode: referralId });
+    if (!referrer) {
+      return res.status(404).json({ error: "Referrer not found." });
+    }
+
+    // Check if the user is already referred
+    if (user.referredBy) {
+      return res.status(400).json({ error: "User is already referred by someone." });
+    }
+
+    // Update the referredBy field for the user
+    user.referredBy = referrer.address;
+
+    // Update the referrer's details
+    referrer.referralCount += 1;
+    referrer.referrals.push(user.address);
+
+    // Save both the user and the referrer
+    await user.save();
+    await referrer.save();
+
+    res.status(200).json({ message: "ReferredBy field updated successfully." });
+  } catch (error) {
+    console.error("Error updating referredBy field:", error);
+    res.status(500).json({ error: "An error occurred while processing the referral." });
+  }
+});
 
 
 
