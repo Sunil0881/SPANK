@@ -21,6 +21,7 @@ import setting from "../src/assets/settings2.png";
 
 function App() {
   const imageRef = useRef<HTMLImageElement | null>(null);
+  const [showPopup, setShowPopup] = useState(false);
   const [coordinates, setCoordinates] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(true);
   const [isFirstImage, setIsFirstImage] = useState(true);
@@ -45,6 +46,7 @@ function App() {
   const [address, setAddress] = useState<`0x${string}` | undefined>(undefined);
   const [loading, setLoading] = useState(true); 
   const [progress, setProgress] = useState(0); 
+  const [referralId, setReferralId] = useState("");
   
   const levelRequirements = [100,200,300,400,500,600,700,800,900,1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000];
 
@@ -95,7 +97,7 @@ function App() {
         return newProgress >= 100 ? 0 : newProgress; // Reset to 0 if it reaches 100
       });
     };
-
+ 
  
 
 useEffect(() => {
@@ -181,7 +183,20 @@ useEffect(() => {
 }, [isConnected, address, urlparms]); 
 
 
-  
+
+const handleOpenPopup = () => setShowPopup(true); // Open popup
+const handleClosePopup = () => setShowPopup(false); // Close popup
+
+const handleRefSubmit = () => {
+  if (referralId.trim() === "") {
+    alert("Please enter a referral ID.");
+    return;
+  }
+  alert(`Referral ID submitted: ${referralId}`);
+  handleClosePopup(); // Close popup after submission
+};
+
+
   useEffect(() => {
     let intervalId:any;
 
@@ -581,11 +596,40 @@ const shareReferralLink = (shareLink:any) => {
             src={setting}
             loading="lazy"
             alt="Ref btn"
-             
+             onClick={handleOpenPopup}
              style={{  width: '40px', height: '40px' }}
           />
             </button> 
         {/* )} */}
+
+        {showPopup && (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded shadow-lg w-80 z-50">
+            <h2 className="text-lg font-bold mb-4">Enter Referral ID</h2>
+            <input
+              type="text"
+              value={referralId}
+              onChange={(e) => setReferralId(e.target.value)}
+              placeholder="Your Referral ID"
+              className="border border-gray-300 rounded w-full px-3 py-2 mb-4 focus:outline-none focus:ring focus:ring-blue-200"
+            />
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={handleClosePopup}
+                className="bg-gray-300 px-4 py-2  rounded hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleRefSubmit}
+                className="bg-blue-500 text-white px-4 py-2 z-60  rounded hover:bg-blue-600"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       </div>
     </div>
