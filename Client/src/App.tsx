@@ -5,13 +5,16 @@ import playbtn from "../src/assets/playbtn.png";
 import ActionImage from "../src/assets/Spank.png";
 import PlusoneImage from "../src/assets/One.png";
 import RedImage from "../src/assets/Red.png"
-import loadingImage from "../src/assets/splashscreen.png"; 
+import loadingImage from "../src/assets/splashscreen.webp"; 
 import Refbtn from "../src/assets/refbtn.png";
 import RedhandImage from "../src/assets/redhand.png"; 
 import CustomButton from "./Components/CustomButton";
 import { useAccount } from 'wagmi';
 import {dev} from "./Constant";
 import "./App.css";
+import animationimgbutt from "../src/assets/animatedimg.png";
+import audio from "../src/assets/Yes_audio.mp3";
+import setting from "../src/assets/settings2.png";
 
 
 
@@ -24,6 +27,7 @@ function App() {
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [message, setMessage] = useState("");
   const [showMessage, setShowMessage] = useState(false);
+  const [loadingmessage, setLoadingmessage] = useState("");
   const [showRef, setShowRef] = useState(false);
   const [showSpankImage, setShowSpankImage] = useState(false);
    const [urlparms, setUrlparms] = useState("");
@@ -33,7 +37,9 @@ function App() {
   const [lastActionCoordinates, setLastActionCoordinates] = useState<{ x: number; y: number } | null>(null);
   const [newImagePosition, setNewImagePosition] = useState<{ x: number; y: number } | null>(null);
   const [score, setScore] = useState(0);
+  const [clickProgress, setClickProgress] = useState(0);
   const [code, setCode] = useState(null);
+  const [Showanimationbutt, setShowanimationbutt] = useState(false);
   const [level, setLevel] = useState(1);
   const [userData, setUserData] = useState(null);
   const [address, setAddress] = useState<`0x${string}` | undefined>(undefined);
@@ -46,91 +52,51 @@ function App() {
     const account = useAccount();
     const fetchedaddress = account.address;
 
-  useEffect(() => {
-    const duration = 3000; 
-    const interval = 100; 
-    const increment = 100 / (duration / interval); 
+    useEffect(() => {
+      const duration = 4000; // Total duration in milliseconds (4 seconds)
+      const interval = 100; // Smaller interval for smoother progress
+      const steps = duration / interval; // Total number of increments
+      const increment = 200 / steps; // Progress increment per interval (ensures it reaches 100%)
+      
+      
+      const loadingInterval = setInterval(() => {
+        setProgress((prev) => {
+          const newProgress = prev + increment;
+          
+          // Display messages at specific progress points
+          if (newProgress >= 0 && newProgress < 35) {
+            setLoadingmessage("Tap that booty and collect SPANKS points");
+          } else if (newProgress >= 35 && newProgress < 70) {
+            setLoadingmessage("Refer friends to earn more points ");
+          } else if (newProgress >= 70) {
+            setLoadingmessage(" Connect your crypto wallet for rewards");
+          }
   
-    const loadingTimeout = setInterval(() => {
-      setProgress((prev) => (prev + increment >= 100 ? 100 : prev + increment));
-      console.log(progress);
-    }, interval);
+          return newProgress >= 100 ? 100 : newProgress;
+        });
+      }, interval);
   
-    
-    const finishLoading = setTimeout(() => {
-      setLoading(false);
-      setProgress(100); 
-    }, duration);
+      const finishLoading = setTimeout(() => {
+        setLoading(false);
+        setProgress(100); // Ensure progress is exactly 100 at the end
+        setMessage("Complete!"); // Final message
+      }, duration);
+      return () => {
+        clearTimeout(finishLoading);
+        clearInterval(loadingInterval);
+      };
+    }, []);
   
-    return () => {
-      clearTimeout(finishLoading);
-      clearInterval(loadingTimeout);
+    const handlemeterClick = () => {
+      setClickProgress((prev) => {
+        const newProgress = prev + 1;
+        console.log(newProgress);
+
+        return newProgress >= 100 ? 0 : newProgress; // Reset to 0 if it reaches 100
+      });
     };
-  }, []);
-  
-//   const checkIfWalletIsConnected = async () => {
-//     if (window.ethereum) {
-//         try {
-//             const provider = new ethers.providers.Web3Provider(window.ethereum);
-//             const accounts = await provider.listAccounts();
-//             const signer = provider.getSigner();
 
-//             console.log("Signer:", signer);
-
-//             // If there are any accounts, set the wallet as connected
-//             if (accounts.length > 0) {
-//                 const connectedAccount = accounts[0];
-//                 setAddress(connectedAccount);
-               
-//                 setIsWalletConnected(true);
-
-//                 console.log("Connected Account:", connectedAccount);
-//                 console.log("Wallet is connected:", true);
-//             } else {
-              
-//                 setIsWalletConnected(false);
-
-//                 console.log("No account connected.");
-//                 console.log("Wallet is connected:", false);
-//             }
-//         } catch (error) {
-//             console.error("Error checking wallet connection:", error);
-//         }
-//     } else {
-//         console.log("MetaMask is not installed");
-//     }
-// };
-
-
-// const connectWallet = async () => {
-//   if (window.ethereum) {
-//       try {
-//           const provider = new ethers.providers.Web3Provider(window.ethereum);
-//           const accounts = await provider.send("eth_requestAccounts", []);
-//           const signer = provider.getSigner();
-//           console.log("signer",signer);
-//           if (accounts.length > 0) {
-//             setAddress(accounts[0]);
-//             console.log(accounts[0]);
-             
-//               setIsWalletConnected(true);
-//           }
-//       } catch (error) {
-//           console.error('Error connecting to wallet:', error);
-//       }
-//   } else {
-//       alert('Please install MetaMask to use this feature.');
-//   }
-// };
  
-
-// const disconnectWallet = () => {
-//   setAddress(null); // Clear the address state
-//   setIsConnected(false); // Update connection state
-//   setIsWalletConnected(false); // Update wallet connection state
-//   console.log("Wallet disconnected");
-// };
-
 
 useEffect(() => {
    
@@ -169,6 +135,10 @@ useEffect(() => {
   console.log("Updated urlparms in useEffect:", urlparms);
 }, [urlparms]);
 
+useEffect(() => {
+  console.log("Updated clickProgress in useEffect:", clickProgress);
+}, [clickProgress]);
+
 
 useEffect(() => {
   const fetchUserData = async () => {
@@ -193,11 +163,12 @@ useEffect(() => {
         const data = await response.json();
         
         setUserData(data);
+        console.log(userData);
         setScore(data.score ?? 0); 
         setLevel(data.level ?? 1); 
+        setClickProgress(data.levelbar ?? 0);
         setCode(data.referralCode ?? 'varala da'); 
-        console.log(data);
-        console.log(userData);
+      
         
       } catch (error) {
         console.log("error");
@@ -223,7 +194,7 @@ useEffect(() => {
   
     return () => clearInterval(intervalId); 
 
-  }, [isConnected, address, score, level]);
+  }, [isConnected, address, score, level, clickProgress]);
 
   useEffect(() => {
     if (score >= 15) {
@@ -235,7 +206,8 @@ useEffect(() => {
 
   const updateUserData = async () => {
     if (isConnected && address) {
-      const data = { address, score, level };
+      const data = { address, score, level, levelbar:clickProgress };
+      console.log(data);
       console.log('Updating Data to DB');
       try {
         const response = await fetch(`${dev}/api/user/update`, {
@@ -300,10 +272,12 @@ useEffect(() => {
   }, [score]);
 
   const displayActionImage = () => {
+    setShowanimationbutt(true);
     setShowSpankImage(true);
     setShowPlusoneImage(true);
     setShowRedImage(true);
     setTimeout(() => {
+      setShowanimationbutt(false);
       setShowSpankImage(false);
       setShowPlusoneImage(false);
       setShowRedImage(false);
@@ -320,9 +294,10 @@ useEffect(() => {
   const handleAction = (areaId: string, x: number, y: number) => {
     if (areaId === "area1") {
       setLastActionCoordinates({ x, y });
-      const audio = new Audio("../src/assets/Yes_audio.mp3");
-      audio.play();
+      const audios = new Audio(audio);
+      audios.play();
       displayActionImage();
+      handlemeterClick();
       setNewImagePosition({ x: 250, y: 300 });
       setScore(prevScore => prevScore + 1);
       if (score >= 15) {
@@ -414,14 +389,21 @@ const shareReferralLink = (shareLink:any) => {
               alt="Loading"
               style={{ width: "514px", height: "515px" }}
               className="absolute"
-            />
-                    <div className="loader-container">
-          <div className="loading-bar absolute mt-60">
-            <div className="progress"></div>
-          </div>
-          <div className="loading-text ">LOADING...</div>
-        </div>
-
+            />    
+         
+             <div className=" text-md font-bold text-red-400 z-30 mt-44 w-60 text-center" style={{ textShadow: "1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff" }}>
+                      {loadingmessage}
+             </div>
+             <div className="loader-container">
+                      
+                  <div className="loading-bar absolute mt-4">
+                      <div className="progress" style={{ width: `${progress}%` }}></div>
+                        
+                     </div>
+                         
+                          <div className="loading-text text-red-400 text-md font-semibold" style={{ textShadow: "1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff" }}>LOADING...</div>
+              </div>
+                   
           </div>
         )}
 
@@ -472,7 +454,7 @@ const shareReferralLink = (shareLink:any) => {
             src={ActionImage}
             loading="lazy"
             alt="Action"
-            className="absolute action-image"
+            className="absolute action-image z-30"
             style={{ left: '235px', top: '300px', width: '140px', height: '140px' }}
           />
         )}
@@ -482,7 +464,7 @@ const shareReferralLink = (shareLink:any) => {
               src={PlusoneImage}
               loading="lazy"
               alt="New Action"
-              className={`new-action-image ${showPlusoneImage ? "show" : "hide"}`}
+              className={`new-action-image z-30 ${showPlusoneImage ? "show" : "hide"}`}
               style={{
                 position: 'absolute', 
                 left:"143px", 
@@ -492,6 +474,19 @@ const shareReferralLink = (shareLink:any) => {
           }}
           />
           )}
+
+          {Showanimationbutt && (
+         
+         <img
+           src={animationimgbutt}
+           loading="lazy"
+           alt="Level Up"
+           className="absolute w-fit  "
+           style={{ left: '123px', width: '290px', height: '490px',bottom:'24px' }}
+         />
+       
+         )}
+
          {showRedImage && (
           <img
             src={RedImage}
@@ -541,14 +536,22 @@ const shareReferralLink = (shareLink:any) => {
           {level}
         </div>
       )}
+{!isFirstImage && (
+  <div className="z-20 absolute top-4 left-6">
+    <div className="progress-meter-container ">
+      <div className="progress-bar" style={{ width: `${clickProgress}%` }}></div>
+      <p className="invisible-dots">...................................</p> {/* Invisible dots */}
+    </div>
+  </div>
+)}
 
         {showMessage && (
           <div className="absolute top-10 left-1/2 transform -translate-x-1/2 bg-white text-black p-1 rounded shadow-md z-20">
             {message}
           </div>
         )}
-       {isFirstImage && showRef && (
-            <button onClick={handleReferClick} className=" absolute  z-30 bottom-2 left-5">
+       {  showRef && (
+            <button onClick={handleReferClick} className=" absolute  z-30 bottom-4 left-5">
                <img
             src={Refbtn}
             loading="lazy"
@@ -558,6 +561,19 @@ const shareReferralLink = (shareLink:any) => {
           />
             </button> 
         )}
+
+          {/* {  showRef && ( */}
+            <button  className=" absolute  z-30 bottom-7 right-6">
+               <img
+            src={setting}
+            loading="lazy"
+            alt="Ref btn"
+             
+             style={{  width: '40px', height: '40px' }}
+          />
+            </button> 
+        {/* )} */}
+
       </div>
     </div>
   );

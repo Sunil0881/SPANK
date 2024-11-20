@@ -27,7 +27,6 @@ const CustomButton = () => {
         account,
         chain,
         openAccountModal,
-        openChainModal,
         openConnectModal,
         authenticationStatus,
         mounted,
@@ -68,22 +67,23 @@ const CustomButton = () => {
               }
 
               // If chain is unsupported, show the chain error message
-              if (hasChain && chain.unsupported) {
-                return (
-                  <button onClick={openChainModal} type="button">
-                    Wrong network
-                  </button>
-                );
-              }
+              // if (hasChain && chain.unsupported) {
+              //   return (
+              //     <button onClick={openChainModal} type="button">
+              //       Wrong network
+              //     </button>
+              //   );
+              // }
 
               // If wallet is connected, show the chain and disconnect buttons
               if (hasAccount && hasChain) {
               return (
                 <div style={{ display: 'flex', gap: 12 }}>
-                  <button
-                    onClick={openChainModal}
-                    style={{ display: 'flex', alignItems: 'center' }}
-                    type="button"
+                  <div>
+                  <div
+                    //onClick={openChainModal}
+                    style={{ display: 'flex', alignItems: 'center', visibility: 'hidden', }}
+                    
                   >
                     {chain.hasIcon && (
                       <div
@@ -106,7 +106,7 @@ const CustomButton = () => {
                       </div>
                     )}
                     {chain.name}
-                  </button>
+                  </div></div>
 
                   <button onClick={openAccountModal} type="button">
                     <img

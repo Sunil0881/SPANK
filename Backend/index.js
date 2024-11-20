@@ -10,7 +10,7 @@ const app = express();
 app.use(cors());
  
 
-app.use(express.json({ limit: '10mb' })); // Increase limit to 10MB
+app.use(express.json({ limit: '10mb' })); 
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 
@@ -19,8 +19,8 @@ mongoose
   .connect(dbURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 30000, // Increase timeout to 30 seconds
-    socketTimeoutMS: 45000, // Increase socket timeout to 45 seconds
+    serverSelectionTimeoutMS: 30000, 
+    socketTimeoutMS: 45000, 
   })
   .then(() => {
     console.log("Connected to MongoDB");
@@ -30,45 +30,47 @@ mongoose
   });
 
   app.post('/api/user', async (req, res) => {
-    console.log(req.body); // Log the incoming request body
-    const { address, referralCode } = req.body; // Extract address and referral code
+    console.log(req.body); 
+    const { address, referralCode } = req.body; 
 
     try {
-        // Check if the user already exists
+        
         let user = await User.findOne({ address });
 
         if (user) {
-            // User exists, return their score and level
+          
             return res.status(200).json({
                 message: "User found.",
                 score: user.score,
                 level: user.level,
+                levelbar: user.levelbar,
                 referralCode: user.referralCode,
             });
         }
 
-        // User does not exist, create a new user
+        
         user = new User({ address });
 
-        // If a referral code is provided, find the referrer
+        
         if (referralCode) {
             const referrer = await User.findOne({ referralCode });
             if (referrer) {
-                user.referredBy = referrer.address; // Set the referrer address
-                referrer.referralCount += 1; // Increment the referrer’s count
-                referrer.referrals.push(address); // Add the new user to the referrer’s referral list
-                await referrer.save(); // Save the updated referrer data
+                user.referredBy = referrer.address; 
+                referrer.referralCount += 1; 
+                referrer.referrals.push(address); 
+                await referrer.save(); 
             }
         }
 
         await user.save();
         console.log("User created");
 
-        // Return user details including the generated referral code
+        
         return res.status(201).json({
             message: "User created.",
             score: user.score,
             level: user.level,
+            levelbar: user.levelbar,
             referralCode: user.referralCode,
         });
 
@@ -79,22 +81,21 @@ mongoose
 });
 
 
-
 app.put('/api/user/update', async (req, res) => {
-  const { address, score, level } = req.body;
-
+  console.log('Received body:', req.body); // Log the body content
+  
+  const { address, score, level, levelbar } = req.body;
+  
   try {
-      // Find the user by their address
       let user = await User.findOne({ address });
 
       if (!user) {
-          // If the user does not exist, return a 404 error
           return res.status(404).json({ message: "User not found." });
       }
 
-      // Update the score and level fields
-      user.score = score || user.score; // Update score if provided, otherwise keep the existing value
+      user.score = score || user.score; 
       user.level = level || user.level; // Update level if provided, otherwise keep the existing value
+      user.levelbar = levelbar || user.levelbar;
       await user.save();
 
       // Return the updated user details
@@ -102,12 +103,14 @@ app.put('/api/user/update', async (req, res) => {
           message: "User score and level updated.",
           score: user.score,
           level: user.level,
+          levelbar: user.levelbar,
       });
   } catch (error) {
       console.error("Error in PUT /api/user/update:", error);
       return res.status(500).json({ message: "Server error.", error: error.message });
   }
 });
+
 
 
 
