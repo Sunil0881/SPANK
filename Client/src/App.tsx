@@ -431,7 +431,7 @@ const handleShare = () => {
       {loading && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-75 z-50">
             <img
-              src={loadingImage}
+              src={ButtonPage}
               loading="lazy"
               alt="Loading"
               style={{ width: "514px", height: "515px" }}
