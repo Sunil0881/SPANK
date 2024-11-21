@@ -42,6 +42,7 @@ mongoose
             return res.status(200).json({
                 message: "User found.",
                 score: user.score,
+                referralScore:user.referralScore,
                 level: user.level,
                 levelbar: user.levelbar,
                 referralCode: user.referralCode,

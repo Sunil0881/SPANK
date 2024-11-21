@@ -163,9 +163,10 @@ useEffect(() => {
         }
 
         const data = await response.json();
+        console.log("data",data);
         setUserData(data);
 
-        setScore(data.score ?? 0);
+        setScore((data.score ?? 0) + (data.referralScore ?? 0));
         setLevel(data.level ?? 1);
         setClickProgress(data.levelbar ?? 0);
         setCode(data.referralCode ?? 'varala da');
