@@ -21,6 +21,7 @@ import setting from "../src/assets/settings2.png";
 
 function App() {
   const imageRef = useRef<HTMLImageElement | null>(null);
+  const [isReferred, setIsReferred] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [coordinates, setCoordinates] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(true);
@@ -144,8 +145,7 @@ useEffect(() => {
 
 useEffect(() => {
   const fetchUserData = async () => {
- 
-    if (isConnected && address ) { 
+    if (isConnected && address) {
       try {
         console.log("Using referralCode:", urlparms);
         const referralCode = urlparms;
@@ -155,7 +155,7 @@ useEffect(() => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ address, referralCode }), 
+          body: JSON.stringify({ address, referralCode }),
         });
 
         if (!response.ok) {
@@ -163,25 +163,29 @@ useEffect(() => {
         }
 
         const data = await response.json();
-        
         setUserData(data);
-        console.log(userData);
-        setScore(data.score ?? 0); 
-        setLevel(data.level ?? 1); 
+
+        setScore(data.score ?? 0);
+        setLevel(data.level ?? 1);
         setClickProgress(data.levelbar ?? 0);
-        setCode(data.referralCode ?? 'varala da'); 
-      
+        setCode(data.referralCode ?? 'varala da');
         
-      } catch (error) {
-        console.log("error");
-        
+        // Check if referredBy exists and update the state
+        if (data.referredBy) {
+          setIsReferred(true);
+        } else {
+          setIsReferred(false);
+        }
+
+        console.log(userData);
+      } catch (error:any) {
+        console.log("Error fetching user data:", error.message);
       }
     }
   };
 
   fetchUserData();
-}, [isConnected, address, urlparms]); 
-
+}, [isConnected, address, urlparms]);
 
 
 const handleOpenPopup = () => setShowPopup(true); // Open popup
@@ -621,7 +625,7 @@ const handleShare = () => {
             </button> 
         )}
 
-          {/* {  showRef && ( */}
+          {  isWalletConnected && isReferred && ( 
             <button  className=" absolute  z-30 bottom-7 right-6">
                <img
             src={setting}
@@ -631,7 +635,7 @@ const handleShare = () => {
              style={{  width: '40px', height: '40px' }}
           />
             </button> 
-        {/* )} */}
+        )} 
 
         {showPopup && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
