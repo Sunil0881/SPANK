@@ -366,8 +366,8 @@ function animateProgress() {
 animateProgress();
 
 const handleShare = () => {
-  const referralUrl = `https://x.com/Sunil_0881/status/1855179504919945397`;
-  const tweetText = `Join the fun in this exciting card game! Use my referral ID: ${code} to get rewards 🎮✨. Play here: ${referralUrl}`;
+  const referralUrl = `https://spank-pi.vercel.app/`;
+  const tweetText = `Join the fun in this exciting spank game! Use my referral ID: ${code} to get rewards 🎮✨. Play here: ${referralUrl}`;
   const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
   window.open(twitterUrl, "_blank"); // Open in a new tab
 };
