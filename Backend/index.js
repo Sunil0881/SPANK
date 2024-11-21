@@ -57,6 +57,7 @@ mongoose
             if (referrer) {
                 user.referredBy = referrer.address; 
                 referrer.referralCount += 1; 
+                referrer.referralScore += 100; 
                 referrer.referrals.push(address); 
                 await referrer.save(); 
             }
