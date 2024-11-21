@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import ButtonPage from "../src/assets/ButtonPage.png";
+import ButtonPage from "../src/assets/ButtonPage.webp";
 import ZoomGirl from "../src/assets/ZoomGirl.png";
 import playbtn from "../src/assets/playbtn.png";
 import ActionImage from "../src/assets/Spank.png";
