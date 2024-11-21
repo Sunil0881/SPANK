@@ -42,6 +42,7 @@ mongoose
             return res.status(200).json({
                 message: "User found.",
                 score: user.score,
+                referralScore:user.referralScore,
                 level: user.level,
                 levelbar: user.levelbar,
                 referralCode: user.referralCode,
@@ -57,6 +58,7 @@ mongoose
             if (referrer) {
                 user.referredBy = referrer.address; 
                 referrer.referralCount += 1; 
+                referrer.referralScore += 100; 
                 referrer.referrals.push(address); 
                 await referrer.save(); 
             }
@@ -142,6 +144,7 @@ app.post("/api/user/update-referred-by", async (req, res) => {
 
     // Update the referrer's details
     referrer.referralCount += 1;
+    referrer.referralScore += 100; 
     referrer.referrals.push(user.address);
 
     // Save both the user and the referrer
