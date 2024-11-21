@@ -21,7 +21,7 @@ import setting from "../src/assets/settings2.png";
 
 function App() {
   const imageRef = useRef<HTMLImageElement | null>(null);
-  const [isReferred, setIsReferred] = useState(false);
+  const [isReferred, setIsReferred] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
   const [coordinates, setCoordinates] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(true);
@@ -172,9 +172,9 @@ useEffect(() => {
         
         // Check if referredBy exists and update the state
         if (data.referredBy) {
-          setIsReferred(true);
-        } else {
           setIsReferred(false);
+        } else {
+          setIsReferred(true);
         }
 
         console.log(userData);
