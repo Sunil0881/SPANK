@@ -21,6 +21,7 @@ import setting from "../src/assets/settings2.png";
 
 function App() {
   const imageRef = useRef<HTMLImageElement | null>(null);
+  const [dispScore, setDispScore] = useState(0);
   const [isReferred, setIsReferred] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
   const [coordinates, setCoordinates] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
@@ -165,7 +166,7 @@ useEffect(() => {
         const data = await response.json();
         console.log("data",data);
         setUserData(data);
-
+        setDispScore((data.score ?? 0)+(data.referralScore ?? 0))
         setScore(data.score ?? 0);
         setLevel(data.level ?? 1);
         setClickProgress(data.levelbar ?? 0);
@@ -581,6 +582,7 @@ const handleShare = () => {
             transition: "color 0.5s ease-in-out", 
           }}>
           {score}
+
         </div>
       )}
 
