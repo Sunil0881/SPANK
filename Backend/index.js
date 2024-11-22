@@ -43,6 +43,7 @@ mongoose
                 message: "User found.",
                 score: user.score,
                 referralScore:user.referralScore,
+                referredBy:user.referredBy,
                 level: user.level,
                 levelbar: user.levelbar,
                 referralCode: user.referralCode,

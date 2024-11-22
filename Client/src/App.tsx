@@ -172,6 +172,7 @@ useEffect(() => {
         setCode(data.referralCode ?? 'varala da');
         
         // Check if referredBy exists and update the state
+        console.log("+++",data);
         if (data.referredBy) {
           setIsReferred(false);
         } else {
