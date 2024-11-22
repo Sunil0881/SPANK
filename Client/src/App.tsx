@@ -212,7 +212,7 @@ const handleRefSubmit = async () => {
 
     if (response.ok) {
       console.log("Referral ID submitted successfully:", data.message);
-      setScore((prevScore) => prevScore + 100);
+      setScore((prevScore) => prevScore + 69);
     } else {
       console.error("Error submitting referral ID:", data.error);
     }
