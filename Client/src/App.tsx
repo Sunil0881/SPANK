@@ -639,34 +639,35 @@ const handleShare = () => {
             </button> 
         )} 
 
-        {showPopup && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded shadow-lg w-80 z-50">
-            <h2 className="text-lg font-bold mb-4">Enter Referral ID</h2>
-            <input
-              type="text"
-              value={referralId}
-              onChange={(e) => setReferralId(e.target.value)}
-              placeholder="Your Referral ID"
-              className="border border-gray-300 rounded w-full px-3 py-2 mb-4 focus:outline-none focus:ring focus:ring-blue-200"
-            />
-            <div className="flex justify-end gap-2">
-              <button
-                onClick={handleClosePopup}
-                className="bg-gray-300 px-4 py-2  rounded hover:bg-gray-400"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleRefSubmit}
-                className="bg-blue-500 text-white px-4 py-2 z-60  rounded hover:bg-blue-600"
-              >
-                Submit
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+{showPopup && (
+  <div className="fixed inset-0 bg-gray-900 bg-opacity-70 flex items-center justify-center z-50">
+    <div className="bg-sky-400 p-6 rounded-lg shadow-xl w-80 z-50 border border-gray-300">
+      <h2 className="text-lg font-bold mb-4 text-white">Enter Referral ID</h2>
+      <input
+        type="text"
+        value={referralId}
+        onChange={(e) => setReferralId(e.target.value)}
+        placeholder="Your Referral ID"
+        className="border border-gray-300 rounded w-full px-3 py-2 mb-4 focus:outline-none focus:ring focus:ring-blue-300 text-gray-900 placeholder-gray-500"
+      />
+      <div className="flex justify-end gap-2">
+        <button
+          onClick={handleClosePopup}
+          className="bg-gray-400 text-gray-900 px-4 py-2 rounded hover:bg-gray-500 focus:outline-none focus:ring focus:ring-blue-300"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={handleRefSubmit}
+          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 focus:outline-none focus:ring focus:ring-blue-400"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
 
       </div>
     </div>
