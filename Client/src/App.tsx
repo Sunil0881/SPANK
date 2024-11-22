@@ -614,20 +614,33 @@ const handleShare = () => {
             {message}
           </div>
         )}
-       {  showRef && (
-            <button 
-            //onClick={handleReferClickk} 
-            onClick={handleShare}
-            className=" absolute  z-30 bottom-4 left-5">
-               <img
+          {showRef && (
+        <button 
+          onClick={handleShare}
+          className="absolute z-30 bottom-4 left-5">
+          <img
             src={Refbtn}
             loading="lazy"
             alt="Ref btn"
-             
-             style={{  width: '65px', height: '65px' }}
+            className="blinking"
+            style={{ width: '65px', height: '65px' }}
           />
-            </button> 
-        )}
+        </button>
+      )}
+
+{showRef && (
+  <button 
+    onClick={handleShare}
+    className="absolute z-30 bottom-4 left-5">
+    <img
+      src={Refbtn}
+      loading="lazy"
+      alt="Ref btn"
+      className="blinking"
+      style={{ width: '65px', height: '65px' }}
+    />
+  </button>
+)}
 
           {  isWalletConnected && isReferred && ( 
             <button  className=" absolute  z-30 bottom-7 right-6">
