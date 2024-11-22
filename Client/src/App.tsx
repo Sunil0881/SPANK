@@ -77,7 +77,7 @@ function App() {
   
           return newProgress >= 100 ? 100 : newProgress;
         });
-      }, interval);
+      }, interval * 2);
   
       const finishLoading = setTimeout(() => {
         setLoading(false);
@@ -441,15 +441,15 @@ const handleShare = () => {
               className="absolute"
             />    
          
-             <div className=" text-md font-bold text-red-400 z-30 mt-44 w-60 text-center" style={{ textShadow: "1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff" }}>
+             <div className=" text-md font-bold text-red-500 z-30 mt-52 w-60 text-center duration-[1000ms]" style={{ textShadow: "1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff" }}>
                       {loadingmessage}
              </div>
-             <div className="relative w-4/5  mt-6 ">
+             <div className="relative w-4/5  mt-4 ">
   {/* Loading Bar */}
   <div className="flex justify-center">
-  <div className="h-4 w-4/5  bg-white rounded-md ring-2 ring-white overflow-hidden">
+  <div className="h-3 w-4/5  bg-white rounded-md ring-4 ring-white overflow-hidden">
     <div
-      className="h-full bg-gradient-to-r from-yellow-400 to-red-500 transition-all duration-300 ease-in-out"
+      className="h-full bg-gradient-to-r from-yellow-400 to-red-500 transition-all duration-[1000ms] ease-in-out"
       style={{ width: `${progress}%` }}
     ></div>
   </div>
@@ -457,7 +457,7 @@ const handleShare = () => {
 
   {/* Loading Text */}
   <div
-    className="mt-3 text-red-400 text-lg font-semibold text-center"
+    className="mt-1 text-red-500 text-lg font-bold text-center"
     style={{
       textShadow: "1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff"
     }}
