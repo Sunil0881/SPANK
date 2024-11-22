@@ -30,45 +30,31 @@ mongoose
   });
 
   app.post('/api/user', async (req, res) => {
-    console.log(req.body); 
-    const { address, referralCode } = req.body; 
+    console.log(req.body);
+    const { address } = req.body; // Removed referralCode extraction
 
     try {
-        
+        // Check if the user already exists
         let user = await User.findOne({ address });
 
         if (user) {
-          
             return res.status(200).json({
                 message: "User found.",
                 score: user.score,
-                referralScore:user.referralScore,
-                referredBy:user.referredBy,
+                referralScore: user.referralScore,
+                referredBy: user.referredBy,
                 level: user.level,
                 levelbar: user.levelbar,
                 referralCode: user.referralCode,
             });
         }
 
-        
+        // Create a new user
         user = new User({ address });
-
-        
-        if (referralCode) {
-            const referrer = await User.findOne({ referralCode });
-            if (referrer) {
-                user.referredBy = referrer.address; 
-                referrer.referralCount += 1; 
-                referrer.referralScore += 100; 
-                referrer.referrals.push(address); 
-                await referrer.save(); 
-            }
-        }
 
         await user.save();
         console.log("User created");
 
-        
         return res.status(201).json({
             message: "User created.",
             score: user.score,
@@ -82,6 +68,7 @@ mongoose
         return res.status(500).json({ message: "Server error.", error: error.message });
     }
 });
+
 
 
 app.put('/api/user/update', async (req, res) => {
