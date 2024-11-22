@@ -141,10 +141,13 @@ app.post("/api/user/update-referred-by", async (req, res) => {
 
     // Update the referredBy field for the user
     user.referredBy = referrer.address;
+    
+    // Update the user's referralScore
+    user.referralScore += 100;
 
     // Update the referrer's details
     referrer.referralCount += 1;
-    referrer.referralScore += 100; 
+    referrer.referralScore += 100;
     referrer.referrals.push(user.address);
 
     // Save both the user and the referrer
