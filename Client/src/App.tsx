@@ -49,7 +49,17 @@ function App() {
   const [progress, setProgress] = useState(0); 
   const [referralId, setReferralId] = useState("");
   
-  const levelRequirements = [100,200,300,400,500,600,700,800,900,1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000];
+  //const levelRequirements = [100,200,300,400,500,600,700,800,900,1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000];
+
+  const generateLevelRequirements = (max: number, step: number) => {
+    const requirements: number[] = [];
+    for (let i = 100; i <= max; i += step) {
+      requirements.push(i);
+    }
+    return requirements;
+  };
+
+  const levelRequirements = generateLevelRequirements(100000000, 2000);
 
     const { isConnected } = useAccount();  
     const account = useAccount();
@@ -308,11 +318,11 @@ const handleRefSubmit = async () => {
     if (level - 1 < levelRequirements.length && score >= levelRequirements[level - 1]) {
       setLevel(prevLevel => {
         const nextLevel = prevLevel + 1;
-        displayRedhandImage(); 
+        displayRedhandImage(); // Your custom function to display the image
         return nextLevel;
       });
     }
-  }, [score]);
+  }, [score, levelRequirements, level]);
 
   const displayActionImage = () => {
     setShowanimationbutt(true);
@@ -571,19 +581,22 @@ const handleShare = () => {
         
         )}
        {!isFirstImage && (
-        <div 
-          className="absolute text-3xl z-20 fade-in" 
-          style={{ 
-            top: "26px", 
-            right: "35px", 
-            background: "linear-gradient(to bottom, rgba(255, 75, 108, 100), rgba(255, 151, 114, 100))", 
-            WebkitBackgroundClip: "text", 
-            color: "transparent", 
-            transition: "color 0.5s ease-in-out", 
-          }}>
-          {score}
-
-        </div>
+       <div
+       className={`absolute z-20 fade-in ${
+         score > 10000 ? "text-xl mt-1" : "text-3xl"
+       }`}
+       style={{
+         top: "26px",
+         right: "35px",
+         background: "linear-gradient(to bottom, rgba(255, 75, 108, 100), rgba(255, 151, 114, 100))",
+         WebkitBackgroundClip: "text",
+         color: "transparent",
+         transition: "color 0.5s ease-in-out",
+       }}
+     >
+       {score}
+     </div>
+     
       )}
 
       {!isFirstImage && (
